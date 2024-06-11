@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using API.Repository.Interfaces;
+using API.Repository.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -17,6 +19,7 @@ namespace ElectronicStoreAPI.Extensions
             #endregion
 
             #region Repository Scope
+            services.AddScoped<IComboRepository, ComboRepository>();
             #endregion
 
             #region Third-party Scope
