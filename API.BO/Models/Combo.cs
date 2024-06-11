@@ -10,7 +10,9 @@ namespace API.BO.Models
     public class Combo
     {
         public int ComboId { get; set; }
+        public string Name { get; set; }
         public List<ComboProducts> Products { get; set; }
         public decimal Price { get; set; }
+        public bool IsAvailable {  get; set; }
     }
 }
