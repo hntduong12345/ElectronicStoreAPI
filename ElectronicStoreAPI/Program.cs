@@ -1,13 +1,24 @@
 using API.BO.Models;
+using ElectronicStoreAPI.Constants;
+using ElectronicStoreAPI.Extensions;
+using ElectronicStoreAPI.Middlewares;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: CorsConstant.PolicyName,
+        policy => { policy.WithOrigins("*").AllowAnyHeader().AllowAnyMethod(); });
+});
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddServices(builder.Configuration);
+builder.Services.AddJwtValidation(builder.Configuration);
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddConfigSwagger();
 
 builder.Services.Configure<MongoDBContext>(builder.Configuration.GetSection("MongoDB"));
 
@@ -22,7 +33,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.UseCors(CorsConstant.PolicyName);
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllers();
 
