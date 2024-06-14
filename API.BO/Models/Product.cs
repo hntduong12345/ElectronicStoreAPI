@@ -4,11 +4,15 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-
+using MongoDB.Driver;
+using MongoDB.Bson;
+using MongoDB.Libmongocrypt;
+using MongoDB.Bson.Serialization.Attributes;
 namespace API.BO.Models
 {
     public class Product
     {
+        [BsonId()]
         public int ProductId { get; set; }
         public string ProductName { get; set; }
         public string Description { get; set; }

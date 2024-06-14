@@ -5,7 +5,12 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text;
-
+using Google.Cloud.Storage;
+using Google.Apis.Auth.OAuth2;
+using Google.Cloud.Storage.V1;
+using API.Service.Services;
+using System.ComponentModel;
+using API.Service.Interfaces;
 namespace ElectronicStoreAPI.Extensions
 {
     public static class DependencyServices
@@ -15,7 +20,8 @@ namespace ElectronicStoreAPI.Extensions
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
             #region Service Scope
-
+            services.AddScoped<IUploadImageService,UploadImageService>();
+            services.AddScoped<IImageModificationService,ImageModificationService>();
             #endregion
 
             #region Repository Scope
@@ -23,7 +29,12 @@ namespace ElectronicStoreAPI.Extensions
             #endregion
 
             #region Third-party Scope
-
+            var jsonSecretKey = config.GetValue<string>("GoogleBucketServiceAccountKey");
+            var googleCredential = GoogleCredential.FromJson(jsonSecretKey);
+            var googleStorageClient = StorageClient.Create(googleCredential);
+            services.AddSingleton(googleCredential);
+            services.AddSingleton(googleStorageClient);
+            
             #endregion
 
             return services;
