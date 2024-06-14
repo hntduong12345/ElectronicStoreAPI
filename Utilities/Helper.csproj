@@ -6,9 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\API.Repository\API.Repository.csproj" />
-    <ProjectReference Include="..\Utilities\Helper.csproj" />
-  </ItemGroup>
-
 </Project>
