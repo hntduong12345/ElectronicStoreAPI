@@ -31,22 +31,20 @@ namespace API.Repository.Repositories
             return await _combo.Find(c => c.IsAvailable).ToListAsync();
         }
 
-        public async Task<Combo> GetComboById(int id)
+        public async Task<Combo> GetComboById(string id)
         {
-            return await _combo.Find(c => c.ComboId == id).FirstOrDefaultAsync();
+            return await _combo.Find(c => c.ComboId.Equals(id)).FirstOrDefaultAsync();
         }
 
         public async Task CreateCombo(CreateComboDTO combo)
         {
-            Combo highestIdCombo = await _combo.Find(new BsonDocument()).SortByDescending(c => c.ComboId).Limit(1).FirstOrDefaultAsync();
-
-            Combo newCombo = new Combo(highestIdCombo.ComboId + 1, combo.Name, combo.Products, combo.Price);
+            Combo newCombo = new Combo(combo.Name, combo.Products, combo.Price);
             await _combo.InsertOneAsync(newCombo);
         }
 
-        public async Task UpdateCombo(int id, ComboDTO combo)
+        public async Task UpdateCombo(string id, ComboDTO combo)
         {
-            Combo currentCombo = await _combo.Find(c => c.ComboId == id).FirstOrDefaultAsync();
+            Combo currentCombo = await _combo.Find(c => c.ComboId.Equals(id)).FirstOrDefaultAsync();
 
             if (currentCombo == null) throw new Exception("Cannot find combo");
 
@@ -56,19 +54,19 @@ namespace API.Repository.Repositories
             currentCombo.Price = combo.Price;
             currentCombo.IsAvailable = combo.IsAvailable;
             
-            await _combo.ReplaceOneAsync(c => c.ComboId == id, currentCombo);
+            await _combo.ReplaceOneAsync(c => c.ComboId.Equals(id), currentCombo);
         }
 
-        public async Task ChangeComboStatus(int id)
+        public async Task ChangeComboStatus(string id)
         {
-            Combo combo = await _combo.Find(c => c.ComboId == id).FirstOrDefaultAsync();
+            Combo combo = await _combo.Find(c => c.ComboId.Equals(id)).FirstOrDefaultAsync();
             if (combo == null) throw new Exception("Cannot find combo");
 
             combo.IsAvailable = !combo.IsAvailable;
-            await _combo.ReplaceOneAsync(c => c.ComboId == id, combo);  
+            await _combo.ReplaceOneAsync(c => c.ComboId.Equals(id), combo);  
         }
 
-        public async Task DeleteCombo(int id)
+        public async Task DeleteCombo(string id)
         {
             FilterDefinition<Combo> filterDefinition = Builders<Combo>.Filter.Eq("Id", id);
             await _combo.DeleteOneAsync(filterDefinition);

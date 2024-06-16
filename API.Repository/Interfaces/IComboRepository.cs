@@ -12,10 +12,10 @@ namespace API.Repository.Interfaces
     {
         public Task<List<Combo>> GetAllCombo();
         public Task<List<Combo>> GetAllAvailableCombo();
-        public Task<Combo> GetComboById(int id);
+        public Task<Combo> GetComboById(string id);
         public Task CreateCombo(CreateComboDTO combo);
-        public Task UpdateCombo(int id, ComboDTO combo);
-        public Task ChangeComboStatus(int id);
-        public Task DeleteCombo(int id);
+        public Task UpdateCombo(string id, ComboDTO combo);
+        public Task ChangeComboStatus(string id);
+        public Task DeleteCombo(string id);
     }
 }

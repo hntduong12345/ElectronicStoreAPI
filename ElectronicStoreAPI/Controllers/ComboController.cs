@@ -37,21 +37,21 @@ namespace ElectronicStoreAPI.Controllers
         }
 
         [HttpPatch(ApiEndpointConstant.Combo.ComboEndpoint)]
-        public async Task<IActionResult> UpdateCombo(int id, ComboDTO combo)
+        public async Task<IActionResult> UpdateCombo(string id, ComboDTO combo)
         {
             await _comboService.UpdateCombo(id, combo);
             return Ok();
         }
 
         [HttpPatch(ApiEndpointConstant.Combo.ComboStatusEndpoint)]
-        public async Task<IActionResult> ChangeComboStatus(int id)
+        public async Task<IActionResult> ChangeComboStatus(string id)
         {
             await _comboService.ChangeComboStatus(id);
             return Ok();
         }
 
         [HttpDelete(ApiEndpointConstant.Combo.ComboEndpoint)]
-        public async Task<IActionResult> DeleteCombo(int id)
+        public async Task<IActionResult> DeleteCombo(string id)
         {
             await _comboService.DeleteCombo(id);
             return Ok();
