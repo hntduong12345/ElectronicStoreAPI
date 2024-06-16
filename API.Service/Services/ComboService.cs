@@ -19,7 +19,7 @@ namespace API.Service.Services
             _comboRepository = comboRepository;
         }
 
-        public async Task ChangeComboStatus(int id)
+        public async Task ChangeComboStatus(string id)
         {
             await _comboRepository.ChangeComboStatus(id);
         }
@@ -28,8 +28,8 @@ namespace API.Service.Services
         {
             await _comboRepository.CreateCombo(combo);
         }
-
-        public async Task DeleteCombo(int id)
+        
+        public async Task DeleteCombo(string id)
         {
             await _comboRepository.DeleteCombo(id);
         }
@@ -44,12 +44,12 @@ namespace API.Service.Services
             return await _comboRepository.GetAllCombo();
         }
 
-        public async Task<Combo> GetComboById(int id)
+        public async Task<Combo> GetComboById(string id)
         {
             return await _comboRepository.GetComboById(id);
         }
 
-        public async Task UpdateCombo(int id, ComboDTO combo)
+        public async Task UpdateCombo(string id, ComboDTO combo)
         {
             await _comboRepository.UpdateCombo(id, combo);
         }
