@@ -1,5 +1,7 @@
 ﻿using API.Repository.Interfaces;
 using API.Repository.Repositories;
+using API.Service.Interfaces;
+using API.Service.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -22,6 +24,7 @@ namespace ElectronicStoreAPI.Extensions
             #region Service Scope
             services.AddScoped<IUploadImageService,UploadImageService>();
             services.AddScoped<IImageModificationService,ImageModificationService>();
+            services.AddScoped<IComboService, ComboService>();
             #endregion
 
             #region Repository Scope
