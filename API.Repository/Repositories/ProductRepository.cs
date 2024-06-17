@@ -1,6 +1,7 @@
 ﻿using API.BO.Models;
 using API.Repository.Interfaces;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -30,8 +31,8 @@ namespace API.Repository.Repositories
         {
             var productAggregate = _productsCollection.Aggregate();
             productAggregate = IncludeCategory(productAggregate);
+            productAggregate = productAggregate.Unwind(field => field.Category, new AggregateUnwindOptions<Product> { PreserveNullAndEmptyArrays = true}) ;
             var result = await  productAggregate.ToListAsync();
-            //return _productsCollection.Find(c => true).ToList();
             return result;
         }
         public async Task<Product>? Get(string id)
@@ -39,6 +40,7 @@ namespace API.Repository.Repositories
             var productAggregate = _productsCollection.Aggregate();
             productAggregate = productAggregate.Match(p => p.ProductId == id);
             productAggregate = IncludeCategory(productAggregate);
+            productAggregate = productAggregate.Unwind(field => field.Category, new AggregateUnwindOptions<Product> { PreserveNullAndEmptyArrays = true });
             var result = await productAggregate.FirstOrDefaultAsync();
             //return _productsCollection.Find(c => c.ProductId == id).FirstOrDefault();
             return result;
@@ -48,21 +50,11 @@ namespace API.Repository.Repositories
             var pipeline = _productsCollection.Aggregate();
             pipeline = pipeline.Skip(start).Limit(take);
             pipeline = IncludeCategory(pipeline);
+            pipeline = pipeline.Unwind(field => field.Category, new AggregateUnwindOptions<Product> { PreserveNullAndEmptyArrays = true });
             var result = await pipeline.ToListAsync();
             //return _productsCollection.Find(c => c.ProductId == id).FirstOrDefault();
             return result;
         }
-
-        //public IList<Product>? GetCondition(Func<Product, bool>? filter, SortDefinition<Product>? sort, string[] includeFields = null, int? skip = null, int take? = null)
-        //{
-
-        //    var aggregatePipeline = _productsCollection.Aggregate();
-        //    aggregatePipeline.Lookup<Product, Category,Product>(_categoryCollection,
-        //        p => p.CategoryId, 
-        //        c => c.CategoryId, 
-        //        result => result.Category );
-        //    return null;
-        //}
         public Task Create(Product product)
         {
             _productsCollection.InsertOne(product);

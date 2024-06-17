@@ -7,11 +7,10 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using MongoDB.Driver;
-using MongoDB.Bson;
 using MongoDB.Libmongocrypt;
-using MongoDB.Bson.Serialization.Attributes;
 namespace API.BO.Models
 {
+    [BsonIgnoreExtraElements]
     public class Product
     {
         [BsonId]

@@ -15,6 +15,8 @@ using System.ComponentModel;
 using API.Service.Interfaces;
 using MongoDB.Driver;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
+using API.BO.AutoMapperProfiles;
 namespace ElectronicStoreAPI.Extensions
 {
     public static class DependencyServices
@@ -43,6 +45,7 @@ namespace ElectronicStoreAPI.Extensions
             var googleStorageClient = StorageClient.Create(googleCredential);
             services.AddSingleton(googleCredential);
             services.AddSingleton(googleStorageClient);
+            services.AddAutoMapper(Assembly.GetAssembly(typeof(DefaultProfile)));
             
             #endregion
 

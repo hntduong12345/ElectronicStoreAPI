@@ -69,14 +69,14 @@ namespace ElectronicStoreAPI.Controllers
                 //SaleEndDate = createProductDto.SaleEndDate,
                 RelativeUrl = url,
             };
-            _productRepository.Create(newProduct);
-            var getAll = _productRepository.GetAll();
+            await _productRepository.Create(newProduct);
+            var getAll = await _productRepository.GetAll();
             return Ok(getAll);
         }
         [HttpGet("product-all")]
         public async Task<ActionResult> TestGetAllProduct()
         {
-            var getAll = _productRepository.GetAll();
+            var getAll = await _productRepository.GetAll();
             return Ok(getAll);
         }
         [HttpPost("category")]
@@ -87,21 +87,16 @@ namespace ElectronicStoreAPI.Controllers
                 CategoryDescription = createCategoryDto.CategoryDescription,
                 CategoryName = createCategoryDto.CategoryName,
             };
-            _categoryRepository.Create(newCate);
-            var getAll = _categoryRepository.GetAll();
+            await _categoryRepository.Create(newCate);
+            var getAll = await _categoryRepository.GetAll();
             return Ok(getAll);
         }
         [HttpGet("category-all")]
         public async Task<ActionResult> TestGetAllCategory()
         {
-            var getAll = _categoryRepository.GetAll();
+            var getAll = await  _categoryRepository.GetAll();
             return Ok(getAll);
         }
-        [HttpPost("product")]
-        public async Task<ActionResult> TestCreateProduct([FromForm]CreateProductDto createProductDto)
-        {
-
-            return Ok();
-        }
+     
     }
 }
