@@ -27,10 +27,14 @@ namespace ElectronicStoreAPI.Extensions
             services.AddScoped<IUploadImageService,UploadImageService>();
             services.AddScoped<IImageModificationService,ImageModificationService>();
             services.AddScoped<IComboService, ComboService>();
+            
+
             #endregion
 
             #region Repository Scope
             services.AddScoped<IComboRepository, ComboRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
             #endregion
 
             #region Third-party Scope

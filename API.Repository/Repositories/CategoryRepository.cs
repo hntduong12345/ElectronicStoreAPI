@@ -1,4 +1,5 @@
 ﻿using API.BO.Models;
+using API.Repository.Interfaces;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -10,49 +11,46 @@ using System.Threading.Tasks;
 
 namespace API.Repository.Repositories
 {
-    public class CategoryRepository : BaseRepository<CategoryRepository>
+    public class CategoryRepository : BaseRepository<CategoryRepository> , ICategoryRepository
     {
         private IMongoCollection<Category> _category;
         public CategoryRepository(IOptions<MongoDBContext> setting) : base(setting)
         {
             _category = _database.GetCollection<Category>("Category");
         }
-        public IList<Category> GetAll()
+        public async Task<IList<Category>> GetAll()
         {
-            return _category.Find(c => true).ToList() ;
+            return await _category.Find(c => true).ToListAsync() ;
         }
-        public Category? Get(string id)
+        public async Task<Category?> Get(string id)
         {
             _category.Aggregate().Lookup<Category,Category>(null,null,null,null);
-            return _category.Find(c => c.CategoryId == id).FirstOrDefault();
+            return await _category.Find(c => c.CategoryId == id).FirstOrDefaultAsync();
         }
-        public IList<Category>? GetRange(int start, int take)
+        public async Task<IList<Category>>? GetRange(int start, int take)
         {
-            return _category.Find(c => true).Skip(start).Limit(take).ToList();
+            return await _category.Find(c => true).Skip(start).Limit(take).ToListAsync();
         }
-        public IList<Category>? GetCondition(Func<Category,bool> filter, SortDefinition<Category> sort)
-        {
-            return null;
-        }
-        public void Create(Category category)
+        public Task Create(Category category)
         {
             _category.InsertOne(category);
+            return Task.CompletedTask;
         }
-        public bool Update(Category category) 
+        public Task<bool> Update(Category category) 
         {
             var updateResult = _category.ReplaceOne(c => c.CategoryId.Equals(category.CategoryId), category);
             if (updateResult.IsAcknowledged is false)
-                return false;
-            return true;
+                return Task.FromResult(false);
+            return Task.FromResult(true);
         }
-        public bool Delete(Category category)
+        public Task<bool> Delete(Category category)
         {
             var deleteResult = _category.DeleteOne(c => c.CategoryId.Equals(category.CategoryId));
             if (deleteResult.IsAcknowledged is false)
-                return false;
+                return Task.FromResult(false);
             if (deleteResult.DeletedCount <= 0)
-                return false;
-            return true;
+                return Task.FromResult(false);
+            return Task.FromResult(true);
         }
 
     }
