@@ -20,7 +20,7 @@ builder.Services.AddServices(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddConfigSwagger();
 
-builder.Services.Configure<MongoDBContext>(builder.Configuration.GetSection("MongoDB"));
+builder.Services.Configure<MongoDBContext>(builder.Configuration.GetSection("MongoDbSection"));
 
 var app = builder.Build();
 

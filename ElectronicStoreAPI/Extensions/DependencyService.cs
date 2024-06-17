@@ -13,6 +13,8 @@ using Google.Cloud.Storage.V1;
 using API.Service.Services;
 using System.ComponentModel;
 using API.Service.Interfaces;
+using MongoDB.Driver;
+using Microsoft.Extensions.DependencyInjection;
 namespace ElectronicStoreAPI.Extensions
 {
     public static class DependencyServices
