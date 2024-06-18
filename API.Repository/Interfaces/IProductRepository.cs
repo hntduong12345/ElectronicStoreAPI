@@ -1,4 +1,5 @@
 ﻿using API.BO.Models;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace API.Repository.Interfaces
         Task<IList<Product>> GetAll();
         Task<Product?> Get(string id);
         Task<IList<Product>> GetRange(int start, int take);
+        Task<IAggregateFluent<Product>> GetAggregatePipeline();
         Task Create(Product product);
         Task<bool> Update(Product product);
         Task<bool> Delete(Product product);

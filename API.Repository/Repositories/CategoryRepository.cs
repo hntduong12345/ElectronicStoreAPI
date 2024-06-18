@@ -53,5 +53,9 @@ namespace API.Repository.Repositories
             return Task.FromResult(true);
         }
 
+        public  Task<IAggregateFluent<Category>> GetAggregatePipeline()
+        {
+            return Task.FromResult(_category.Aggregate());
+        }
     }
 }

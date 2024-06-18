@@ -29,7 +29,8 @@ namespace ElectronicStoreAPI.Extensions
             services.AddScoped<IUploadImageService,UploadImageService>();
             services.AddScoped<IImageModificationService,ImageModificationService>();
             services.AddScoped<IComboService, ComboService>();
-            
+            services.AddScoped<IProductServices, ProductServices>();
+            services.AddScoped<ICategoryServices,CategoryService>();
 
             #endregion
 

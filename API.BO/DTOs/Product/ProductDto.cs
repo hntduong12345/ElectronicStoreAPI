@@ -10,8 +10,9 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Http;
 using API.BO.Constants;
 using API.BO.CustomAttributes;
+using API.BO.DTOs.Category;
 
-namespace API.BO.DTOs
+namespace API.BO.DTOs.Product
 {
     public class ProductDto
     {
@@ -52,8 +53,8 @@ namespace API.BO.DTOs
         //[AllowNull]
         //public DateTime? SaleEndDate { get; set; } = null;
         [Required]
-        [AllowFileContentType(new string[] {"image/png", "image/jpeg"})]
-        public IFormFile ImageFile { get; set; } 
+        [AllowFileContentType(new string[] { "image/png", "image/jpeg" })]
+        public IFormFile ImageFile { get; set; }
     }
 
     public class UpdateProductDto
@@ -63,17 +64,17 @@ namespace API.BO.DTOs
         public string ProductName { get; set; }
         public string? Description { get; set; }
         [Range(0, int.MaxValue)]
-        public decimal DefaultPrice { get; set; } 
+        public decimal DefaultPrice { get; set; }
         [Required]
         [NotNull]
         public string CategoryId { get; set; }
         [MinLength(1)]
         public string Manufacturer { get; set; }
         [Range(0, int.MaxValue)]
-        public int StorageAmount { get; set; } 
+        public int StorageAmount { get; set; }
         //[Range(0, int.MaxValue)]
         //public decimal CurrentPrice { get; set; } = 0;
-        public bool IsOnSale { get; set; } 
+        public bool IsOnSale { get; set; }
         [AllowNull]
         [IsDateTimeAfterNow]
         public DateTime? SaleEndDate { get; set; }

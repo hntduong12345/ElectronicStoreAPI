@@ -76,5 +76,10 @@ namespace API.Repository.Repositories
                 return Task.FromResult(false);
             return Task.FromResult(true);
         }
+
+        public Task<IAggregateFluent<Product>> GetAggregatePipeline()
+        {
+            return Task.FromResult(_productsCollection.Aggregate());
+        }
     }
 }

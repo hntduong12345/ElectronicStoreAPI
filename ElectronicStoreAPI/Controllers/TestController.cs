@@ -1,4 +1,5 @@
-﻿using API.BO.DTOs;
+﻿using API.BO.DTOs.Category;
+using API.BO.DTOs.Product;
 using API.BO.Models;
 using API.Repository.Repositories;
 using API.Service.Interfaces;

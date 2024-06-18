@@ -1,4 +1,5 @@
-﻿using API.BO.Models;
+﻿using API.BO.DTOs.Category;
+using API.BO.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +13,10 @@ namespace API.Service.Interfaces
         Task<IList<Category>> GetAll();
         Task<IList<Category>> GetRange(int start, int take);
         Task<Category?> Get(string id);
-        Task Create();
-        Task<bool> Update();
-        Task<bool> Delete();
-        Task UpdateStorage();
-        Task SetSales();
+        Task<Category> Create(CreateCategoryDto createCategoryDto);
+        Task<bool> Update(string categoryId,UpdateCategoryDto updateCategoryDto);
+        Task<bool> Delete(string categoryId);
+
         
     }
 }
