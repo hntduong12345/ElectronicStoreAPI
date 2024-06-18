@@ -11,7 +11,9 @@ namespace API.Service.Interface
     public interface IAccountService
     {
         Task<LoginResponseDTO> Login(string input, string password);
-        Task<LoginResponseDTO> Register(string email, string password);
-        Task<Account> GetUserInformation(int id);
+        Task<LoginResponseDTO> Register(string email, string password, string role);
+        Task<Account> GetUserInformation(string id);
+        Task<List<Account>> GetAccounts();
+        Task<Account> GetByEmail(string email);
     }
 }

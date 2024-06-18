@@ -3,7 +3,9 @@ using API.BO.Models;
 using API.Repository.Interfaces;
 using API.Repository.Repositories;
 using API.Service.Interface;
+using DnsClient;
 using Helper;
+using MongoDB.Bson;
 
 namespace API.Service
 {
@@ -13,8 +15,8 @@ namespace API.Service
         private readonly ITokenService _tokenService;
         public AccountService(IAccountRepository accountRepository, ITokenService tokenService)
         {
-            _tokenService = tokenService;
             _accountRepository = accountRepository;
+            _tokenService = tokenService;
         }
 
         public async Task<LoginResponseDTO> Login(string input, string password)
@@ -31,27 +33,56 @@ namespace API.Service
                 AccessToken = jwtToken,
             };
         }
-        public async Task<LoginResponseDTO> Register(string email, string password)
+        public async Task<LoginResponseDTO> Register(string email, string password, string role)
         {
-            Random rnd = new Random();
-            Account account = new Account()
+            try
             {
-                AccountId = rnd.Next(1,20),
-                Email = email,
-                Password = password
-            };
-            var flag = await _accountRepository.Add(account);
-            if (flag)
-            {
-                return await Login(email, password);
+                bool checkedExist = (await _accountRepository.GetByCondition(p => p.Password == password && p.Email == email)).Any();
+                if (!checkedExist)
+                {
+                    Account account = new Account()
+                    {
+                        Email = email,
+                        Password = password,
+                        Role = role
+                    };
+                    var flag = await _accountRepository.Add(account);
+                    if (flag)
+                    {
+                        var registered = (await _accountRepository.GetByCondition(p => p.Password == password && p.Email == email)).FirstOrDefault();
+                        string jwtToken;
+                        jwtToken = _tokenService.CreateToken(registered);
+                        return new LoginResponseDTO()
+                        {
+                            AccessToken = jwtToken,
+                        };
+                    }
+                    else throw new Exception();
+                }
+                else
+                {
+                    throw new Exception("This email has already being used!");
+                }
             }
-            else throw new Exception();
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
         }
-        public async Task<Account> GetUserInformation(int id)
+        public async Task<Account> GetUserInformation(string id)
         {
             var account = (await _accountRepository.GetByCondition(p => p.AccountId == id)).FirstOrDefault();
             if (account != null) { return account; }
             else throw new Exception();
+        }
+
+        public async Task<List<Account>> GetAccounts()
+        {
+            return (await _accountRepository.GetAll()).ToList();
+        }
+        public async Task<Account> GetByEmail(string email)
+        {
+            return (await _accountRepository.GetByCondition(p => p.Email == email)).FirstOrDefault();
         }
     }
 }

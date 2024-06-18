@@ -1,4 +1,6 @@
 ﻿using API.BO.Models.Documents;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +11,10 @@ namespace API.BO.Models
 {
     public class Order
     {
-        public int OrderId { get; set; }
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        [BsonElement("_id")]
+        public string OrderId { get; set; }
         public decimal TotalPrice { get; set; }
         public int AccountId { get; set; }
         public List<OrderDetail> OrderDetails { get; set; } 

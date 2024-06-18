@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -9,7 +11,10 @@ namespace API.BO.Models
 {
     public class Product
     {
-        public int ProductId { get; set; }
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        [BsonElement("_id")]
+        public string ProductId { get; set; }
         public string ProductName { get; set; }
         public string Description { get; set; }
         public decimal DefaultPrice { get; set; }

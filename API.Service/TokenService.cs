@@ -1,6 +1,5 @@
 ﻿using API.BO.Models;
 using API.Repository.Interfaces;
-using API.Repository.Repositories;
 using API.Service.Interface;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -24,7 +23,6 @@ namespace API.Service
         public string CreateToken(Account account)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-
             var claims = new List<Claim>()
             {
                 new Claim(JwtRegisteredClaimNames.Iss, _configuration["Jwt:Issuer"]),

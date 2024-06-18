@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +10,10 @@ namespace API.BO.Models
 {
     public class Voucher
     {
-        public int VoucherId { get; set; }
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        [BsonElement("_id")]
+        public string VoucherId { get; set; }
         public decimal TotalPrice { get; set; }
         public int AccountId { get; set; }
         public int Amount { get; set; }

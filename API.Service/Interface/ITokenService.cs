@@ -9,6 +9,6 @@ namespace API.Service.Interface
 {
     public interface ITokenService
     {
-        public string CreateToken(Account account);
+        string CreateToken(Account account);
     }
 }

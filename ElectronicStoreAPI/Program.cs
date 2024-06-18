@@ -1,4 +1,6 @@
 using API.BO.Models;
+using API.Service;
+using API.Service.Interface;
 using ElectronicStoreAPI.Constants;
 using ElectronicStoreAPI.Extensions;
 using ElectronicStoreAPI.Middlewares;
@@ -20,6 +22,7 @@ builder.Services.AddJwtValidation(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddConfigSwagger();
 
+builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.Configure<MongoDBContext>(builder.Configuration.GetSection("MongoDB"));
 
 var app = builder.Build();

@@ -15,7 +15,7 @@ namespace ElectronicStoreAPI.Extensions
         public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
-
+            
             #region Service Scope
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAccountService, AccountService>();
