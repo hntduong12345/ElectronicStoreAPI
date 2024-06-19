@@ -49,12 +49,11 @@ namespace ElectronicStoreAPI.Controllers
         [HttpGet("range")]
         public async Task<ActionResult> GetRange(
             [FromQuery] int start, 
-            [FromQuery] int take, 
             [FromQuery] int? pageSize = 10)
         {
-            if (start < 0 || take < 0)
+            if (start < 0 || pageSize < 0)
                 return BadRequest("start and take must > 0");
-            take = start * pageSize.Value;
+            var take = start * pageSize.Value;
             var getResult = await _productServices.GetRange(start, take);
             var mappedResult = _mapper.Map<IList<ProductDto>>(getResult.Values);
             return Ok(new PagingResponseDto<ProductDto>

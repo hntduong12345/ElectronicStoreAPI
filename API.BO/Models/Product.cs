@@ -21,6 +21,7 @@ namespace API.BO.Models
         public decimal DefaultPrice { get; set; }
         [BsonRepresentation(BsonType.ObjectId)]
         public string CategoryId { get; set; }
+        [BsonIgnoreIfNull]
         public Category? Category { get; set; }
         public string Manufacturer { get; set; }
         public int StorageAmount { get; set; }

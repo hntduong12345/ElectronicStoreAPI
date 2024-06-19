@@ -24,14 +24,14 @@ namespace API.Repository.Repositories
             var lookup = pipeline.Lookup<Product, Category, Product>(categoryCollection,
                 p => p.CategoryId,
                 c => c.CategoryId,
-                result => result.Category);
+                result => result.Category );
             return lookup;
         }
         public async Task<IList<Product>> GetAll()
         {
             var productAggregate = _productsCollection.Aggregate();
             productAggregate = IncludeCategory(productAggregate);
-            productAggregate = productAggregate.Unwind(field => field.Category, new AggregateUnwindOptions<Product> { PreserveNullAndEmptyArrays = true}) ;
+            productAggregate = productAggregate.Unwind<Product,Product>(field => field.Category, new AggregateUnwindOptions<Product> { PreserveNullAndEmptyArrays = true ,}) ;
             var result = await  productAggregate.ToListAsync();
             return result;
         }

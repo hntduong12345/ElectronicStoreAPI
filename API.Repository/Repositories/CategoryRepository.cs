@@ -24,7 +24,7 @@ namespace API.Repository.Repositories
         }
         public async Task<Category?> Get(string id)
         {
-            _category.Aggregate().Lookup<Category,Category>(null,null,null,null);
+            //_category.Aggregate().Lookup<Category,Category>(null,null,null,null);
             return await _category.Find(c => c.CategoryId == id).FirstOrDefaultAsync();
         }
         public async Task<IList<Category>>? GetRange(int start, int take)
