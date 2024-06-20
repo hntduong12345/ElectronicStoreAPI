@@ -1,4 +1,4 @@
-﻿using API.BO.DTOs;
+﻿using API.BO.DTOs.Account;
 using API.BO.Models;
 using System;
 using System.Collections.Generic;
@@ -15,5 +15,7 @@ namespace API.Service.Interface
         Task<Account> GetUserInformation(string id);
         Task<List<Account>> GetAccounts();
         Task<Account> GetByEmail(string email);
+        Task<Account> GetById(string id);
+        Task<Account> UpdateProfile(string id, AccountUpdateDTO updateDTO);
     }
 }

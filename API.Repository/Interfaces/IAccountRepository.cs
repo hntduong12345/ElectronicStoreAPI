@@ -8,8 +8,16 @@ using System.Threading.Tasks;
 
 namespace API.Repository.Interfaces
 {
-    public interface IAccountRepository : IBaseRepository<Account>
+    public interface IAccountRepository
     {
-        
+        Task<IList<Account>> GetAll();
+        Task<IList<Account>> GetByCondition(
+            Expression<Func<Account, bool>> filter = null,
+            Func<IQueryable<Account>, IOrderedQueryable<Account>> orderBy = null,
+            int? skip = null, int? take = null);
+
+        Task<bool> Add(Account entity);
+        Task<bool> Update(Account entity);
+        Task<bool> Delete(Account entity);
     }
 }

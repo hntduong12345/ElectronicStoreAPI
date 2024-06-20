@@ -1,5 +1,7 @@
-﻿using API.BO.Models;
+﻿using API.BO.DTOs.Account;
+using API.BO.Models;
 using API.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -28,7 +30,7 @@ namespace API.Repository.Repositories
             Expression<Func<Account, bool>> filter = null,
             Func<IQueryable<Account>,
                 IOrderedQueryable<Account>> orderBy = null,
-            string[] includeProperties = null, int? skip = null, int? take = null)
+            int? skip = null, int? take = null)
         {
             IFindFluent<Account, Account> query;
             if (filter != null) query = _accounts.Find(filter);

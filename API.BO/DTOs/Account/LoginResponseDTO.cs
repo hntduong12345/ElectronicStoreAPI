@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace API.BO.DTOs
+namespace API.BO.DTOs.Account
 {
     public class LoginResponseDTO
     {

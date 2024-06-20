@@ -1,4 +1,4 @@
-﻿using API.BO.DTOs;
+﻿using API.BO.DTOs.Account;
 using API.Service.Interface;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -47,10 +47,25 @@ namespace ElectronicStoreAPI.Controllers
             var response = _mapper.Map<List<AccountDTO>>(result);
             return Ok(response);
         }
-        [HttpGet("/get-profile/{email}")]
+        [HttpGet("/get-profile-by-email/{email}")]
         public async Task<IActionResult> GetByEmail(string email)
         {
             var result = await _accountService.GetByEmail(email);
+            var response = _mapper.Map<AccountDTO>(result);
+            return Ok(response);
+        }
+        [HttpGet("/get-profile-by-id/{id}")]
+        public async Task<IActionResult> GetById(string id)
+        {
+            var result = await _accountService.GetById(id);
+            var response = _mapper.Map<AccountDTO>(result);
+            return Ok(response);
+        }
+
+        [HttpPut("/update-profile/{id}")]
+        public async Task<IActionResult> UpdateProfile(string id, [FromBody] AccountUpdateDTO updateDTO)
+        {
+            var result = await _accountService.UpdateProfile(id, updateDTO);
             var response = _mapper.Map<AccountDTO>(result);
             return Ok(response);
         }
