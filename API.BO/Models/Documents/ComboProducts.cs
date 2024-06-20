@@ -8,6 +8,6 @@ namespace API.BO.Models.Documents
 {
     public class ComboProducts
     {
-        public int ProductId { get; set; }
+        public string ProductId { get; set; }
     }
 }
