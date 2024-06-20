@@ -7,7 +7,7 @@ using DnsClient;
 using Helper;
 using MongoDB.Bson;
 
-namespace API.Service
+namespace API.Service.Services
 {
     public class AccountService : IAccountService
     {
@@ -22,7 +22,7 @@ namespace API.Service
         public async Task<LoginResponseDTO> Login(string input, string password)
         {
             var login = (await _accountRepository.GetByCondition(p => p.Password == password && (RegexUtil.IsEmail(input) ? p.Email == input : p.PhoneNumber == input))).FirstOrDefault();
-            if(login == null)
+            if (login == null)
             {
                 throw new Exception();
             }
@@ -78,8 +78,6 @@ namespace API.Service
 
         public async Task<List<Account>> GetAccounts()
         {
-            string[] includes = new string[3];
-            includes[0] = "Order";
             return (await _accountRepository.GetAll()).ToList();
         }
         public async Task<Account> GetByEmail(string email)
