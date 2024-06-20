@@ -27,7 +27,7 @@ namespace ElectronicStoreAPI.Extensions
             services.AddScoped<IComboService, ComboService>();
             services.AddScoped<IProductServices, ProductServices>();
             services.AddScoped<ICategoryServices,CategoryService>();
-
+            services.AddScoped<IVoucherService, VoucherService>();
             services.AddScoped<IOrderService, OrderService>();
             #endregion
 
@@ -37,6 +37,7 @@ namespace ElectronicStoreAPI.Extensions
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IVoucherRepository, VoucherRepository>();
             #endregion
 
             #region Third-party Scope
