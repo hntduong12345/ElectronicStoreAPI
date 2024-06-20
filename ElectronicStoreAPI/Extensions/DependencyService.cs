@@ -8,7 +8,16 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text;
-
+using Google.Cloud.Storage;
+using Google.Apis.Auth.OAuth2;
+using Google.Cloud.Storage.V1;
+using API.Service.Services;
+using System.ComponentModel;
+using API.Service.Interfaces;
+using MongoDB.Driver;
+using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
+using API.BO.AutoMapperProfiles;
 namespace ElectronicStoreAPI.Extensions
 {
     public static class DependencyServices
@@ -20,16 +29,29 @@ namespace ElectronicStoreAPI.Extensions
             #region Service Scope
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IUploadImageService,UploadImageService>();
+            services.AddScoped<IImageModificationService,ImageModificationService>();
             services.AddScoped<IComboService, ComboService>();
+            services.AddScoped<IProductServices, ProductServices>();
+            services.AddScoped<ICategoryServices,CategoryService>();
+
             #endregion
 
             #region Repository Scope
             services.AddScoped<IComboRepository, ComboRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
             #endregion
 
             #region Third-party Scope
-
+            var jsonSecretKey = config.GetValue<string>("GoogleBucketServiceAccountKey");
+            var googleCredential = GoogleCredential.FromJson(jsonSecretKey);
+            var googleStorageClient = StorageClient.Create(googleCredential);
+            services.AddSingleton(googleCredential);
+            services.AddSingleton(googleStorageClient);
+            services.AddAutoMapper(Assembly.GetAssembly(typeof(DefaultProfile)));
+            
             #endregion
 
             return services;
