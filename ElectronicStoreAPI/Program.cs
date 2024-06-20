@@ -1,6 +1,5 @@
 using API.BO.Models;
 using API.Service;
-using API.Service.Interface;
 using ElectronicStoreAPI.Constants;
 using ElectronicStoreAPI.Extensions;
 using ElectronicStoreAPI.Middlewares;

@@ -2,10 +2,11 @@
 using API.BO.Models;
 using API.Repository.Interfaces;
 using API.Repository.Repositories;
-using API.Service.Interface;
+using API.Service.Interfaces;
 using DnsClient;
 using Helper;
 using MongoDB.Bson;
+using System.Linq.Expressions;
 
 namespace API.Service.Services
 {
@@ -13,15 +14,18 @@ namespace API.Service.Services
     {
         private readonly IAccountRepository _accountRepository;
         private readonly ITokenService _tokenService;
-        public AccountService(IAccountRepository accountRepository, ITokenService tokenService)
+        private readonly IOrderService _orderService;
+        public AccountService(IAccountRepository accountRepository, ITokenService tokenService, IOrderService orderService)
         {
             _accountRepository = accountRepository;
             _tokenService = tokenService;
+            _orderService = orderService;
         }
 
         public async Task<LoginResponseDTO> Login(string input, string password)
         {
-            var login = (await _accountRepository.GetByCondition(p => p.Password == password && (RegexUtil.IsEmail(input) ? p.Email == input : p.PhoneNumber == input))).FirstOrDefault();
+            Expression<Func<Account, object>> filter = RegexUtil.IsEmail(input) ? p => p.Email : p => p.PhoneNumber;
+            var login = (await _accountRepository.GetByCondition( 1, 10, (filter,input), (p => p.Password, password))).FirstOrDefault();
             if (login == null)
             {
                 throw new Exception();
@@ -37,7 +41,7 @@ namespace API.Service.Services
         {
             try
             {
-                bool checkedExist = (await _accountRepository.GetByCondition(p => p.Password == password && p.Email == email)).Any();
+                bool checkedExist = (await _accountRepository.GetByCondition(1, 10, (p => p.Email, email))).Any();
                 if (!checkedExist)
                 {
                     Account account = new Account()
@@ -49,7 +53,7 @@ namespace API.Service.Services
                     var flag = await _accountRepository.Add(account);
                     if (flag)
                     {
-                        var registered = (await _accountRepository.GetByCondition(p => p.Password == password && p.Email == email)).FirstOrDefault();
+                        var registered = (await _accountRepository.GetByCondition(1, 10, (p => p.Password, password),(p => p.Email, email))).FirstOrDefault();
                         string jwtToken;
                         jwtToken = _tokenService.CreateToken(registered);
                         return new LoginResponseDTO()
@@ -71,7 +75,7 @@ namespace API.Service.Services
         }
         public async Task<Account> GetUserInformation(string id)
         {
-            var account = (await _accountRepository.GetByCondition(p => p.AccountId == id)).FirstOrDefault();
+            var account = (await _accountRepository.GetByCondition(1, 10, (p => p.AccountId, id))).FirstOrDefault();
             if (account != null) { return account; }
             else throw new Exception();
         }
@@ -82,27 +86,27 @@ namespace API.Service.Services
         }
         public async Task<Account> GetByEmail(string email)
         {
-            return (await _accountRepository.GetByCondition(p => p.Email == email)).FirstOrDefault();
+            return (await _accountRepository.GetByCondition(1, 10, (p => p.Email, email))).FirstOrDefault();
         }
         public async Task<Account> GetById(string id)
         {
-            return (await _accountRepository.GetByCondition(p => p.AccountId == id)).FirstOrDefault();
+            return (await _accountRepository.GetByCondition(1, 10, (p => p.AccountId, id))).FirstOrDefault();
         }
-        public async Task<Account> UpdateProfile(string id, AccountUpdateDTO updateDTO)
+        public async Task<bool> UpdateProfile(string id, AccountUpdateDTO updateDTO)
         {
             try
             {
-                var result = (await _accountRepository.GetByCondition(p => p.AccountId == id)).FirstOrDefault();
+                var result = (await _accountRepository.GetByCondition(1, 10, (p => p.AccountId, id))).FirstOrDefault();
                 result.Address = updateDTO.Address;
                 result.FirstName = updateDTO.FirstName;
                 result.LastName = updateDTO.LastName;
                 result.PhoneNumber = updateDTO.PhoneNumber;
                 await _accountRepository.Update(result);
-                return result;
+                return true;
             }
             catch (Exception ex)
             {
-                throw new Exception();
+                return false;
             }
         }
     }

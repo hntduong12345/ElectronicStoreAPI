@@ -11,7 +11,6 @@ using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
 using System.Reflection;
 using API.BO.AutoMapperProfiles;
-using API.Service.Interface;
 namespace ElectronicStoreAPI.Extensions
 {
     public static class DependencyServices
