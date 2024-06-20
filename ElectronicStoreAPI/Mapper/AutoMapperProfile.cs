@@ -1,4 +1,4 @@
-﻿using API.BO.DTOs;
+﻿using API.BO.DTOs.Account;
 using API.BO.Models;
 using AutoMapper;
 
@@ -13,7 +13,9 @@ namespace ElectronicStoreAPI.Mapper
     
         void AccountMappingProfile()
         {
+            CreateMap<Account, AccountUpdateDTO>().ReverseMap();
             CreateMap<Account, AccountDTO>().ReverseMap();
+        
         }
     }
 

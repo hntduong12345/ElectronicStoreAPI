@@ -1,4 +1,4 @@
-﻿using API.BO.DTOs;
+﻿using API.BO.DTOs.Account;
 using API.BO.Models;
 using API.Repository.Interfaces;
 using API.Repository.Repositories;
@@ -78,11 +78,34 @@ namespace API.Service
 
         public async Task<List<Account>> GetAccounts()
         {
+            string[] includes = new string[3];
+            includes[0] = "Order";
             return (await _accountRepository.GetAll()).ToList();
         }
         public async Task<Account> GetByEmail(string email)
         {
             return (await _accountRepository.GetByCondition(p => p.Email == email)).FirstOrDefault();
+        }
+        public async Task<Account> GetById(string id)
+        {
+            return (await _accountRepository.GetByCondition(p => p.AccountId == id)).FirstOrDefault();
+        }
+        public async Task<Account> UpdateProfile(string id, AccountUpdateDTO updateDTO)
+        {
+            try
+            {
+                var result = (await _accountRepository.GetByCondition(p => p.AccountId == id)).FirstOrDefault();
+                result.Address = updateDTO.Address;
+                result.FirstName = updateDTO.FirstName;
+                result.LastName = updateDTO.LastName;
+                result.PhoneNumber = updateDTO.PhoneNumber;
+                await _accountRepository.Update(result);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception();
+            }
         }
     }
 }

@@ -22,6 +22,6 @@ namespace API.BO.Models
         public string Address { get; set; }
         public string PhoneNumber { get; set; }
         public string Role { get; set; }
-        public List<Orders> Orders { get; set; }
+        public List<string> OrderIds { get; set; }
     }
 }
