@@ -1,4 +1,5 @@
-﻿using API.BO.Models.Documents;
+﻿using API.BO.DTOs.Order;
+using API.BO.Models.Documents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,6 @@ namespace API.BO.DTOs.Account
         public string Address { get; set; }
         public string PhoneNumber { get; set; }
         public string Role { get; set; }
-        public List<Orders> Orders { get; set; }
+        public List<OrderDTO> Orders { get; set; }
     }
 }
