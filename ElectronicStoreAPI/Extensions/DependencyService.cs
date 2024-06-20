@@ -18,10 +18,12 @@ namespace ElectronicStoreAPI.Extensions
 
             #region Service Scope
             services.AddScoped<IComboService, ComboService>();
+            services.AddScoped<IOrderService, OrderService>();
             #endregion
 
             #region Repository Scope
             services.AddScoped<IComboRepository, ComboRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             #endregion
 
             #region Third-party Scope
