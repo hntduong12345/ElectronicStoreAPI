@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace API.Repository.Interfaces
+namespace API.Service.Interfaces
 {
-    public interface IComboRepository
+    public interface IComboService
     {
         public Task<List<Combo>> GetAllCombo();
         public Task<List<Combo>> GetAllAvailableCombo();

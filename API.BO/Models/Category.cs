@@ -12,7 +12,6 @@ namespace API.BO.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        [BsonElement("_id")]
         public string CategoryId { get; set; }
         public string CategoryName { get; set; }
         public string CategoryDescription { get; set; }
