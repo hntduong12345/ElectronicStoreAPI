@@ -13,5 +13,12 @@
             public const string AvailableCombosEndpoint = CombosEndpoint + "/availability";
             public const string ComboStatusEndpoint = ComboEndpoint + "/status";
         }
+
+        public static class Order
+        {
+            public const string OrdersEndpoint = ApiEndpoint + "/orders";
+            public const string OrderEndpoint = OrdersEndpoint + "/{id}";
+            public const string OrderStatusEndpoint = OrderEndpoint + "/status";
+        }
     }
 }

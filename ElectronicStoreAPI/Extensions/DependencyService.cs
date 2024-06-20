@@ -7,25 +7,47 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text;
-
+using Google.Apis.Auth.OAuth2;
+using Google.Cloud.Storage.V1;
+using System.Reflection;
+using API.BO.AutoMapperProfiles;
+using API.Service.Interface;
 namespace ElectronicStoreAPI.Extensions
 {
     public static class DependencyServices
     {
-        public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration config)
+        public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
-
+            
             #region Service Scope
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IUploadImageService,UploadImageService>();
+            services.AddScoped<IImageModificationService,ImageModificationService>();
             services.AddScoped<IComboService, ComboService>();
+            services.AddScoped<IProductServices, ProductServices>();
+            services.AddScoped<ICategoryServices,CategoryService>();
+
+            services.AddScoped<IOrderService, OrderService>();
             #endregion
 
             #region Repository Scope
             services.AddScoped<IComboRepository, ComboRepository>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             #endregion
 
             #region Third-party Scope
-
+            var jsonSecretKey = configuration.GetValue<string>("GoogleBucketServiceAccountKey");
+            var googleCredential = GoogleCredential.FromJson(jsonSecretKey);
+            var googleStorageClient = StorageClient.Create(googleCredential);
+            services.AddSingleton(googleCredential);
+            services.AddSingleton(googleStorageClient);
+            services.AddAutoMapper(Assembly.GetAssembly(typeof(DefaultProfile)));
+            
             #endregion
 
             return services;

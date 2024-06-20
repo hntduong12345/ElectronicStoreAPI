@@ -1,4 +1,6 @@
 using API.BO.Models;
+using API.Service;
+using API.Service.Interface;
 using ElectronicStoreAPI.Constants;
 using ElectronicStoreAPI.Extensions;
 using ElectronicStoreAPI.Middlewares;
@@ -15,12 +17,13 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddServices(builder.Configuration);
-builder.Services.AddJwtValidation(builder.Configuration);
+//builder.Services.AddJwtValidation(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddConfigSwagger();
 
-builder.Services.Configure<MongoDBContext>(builder.Configuration.GetSection("MongoDB"));
+builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.Configure<MongoDBContext>(builder.Configuration.GetSection("MongoDbSection"));
 
 var app = builder.Build();
 
