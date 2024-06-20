@@ -36,6 +36,7 @@ namespace API.Repository.Repositories
         {
             var aggregate = _accounts.Aggregate();
             var included = IncludeOrders(aggregate);
+            included = included.Unwind(field => field.Orders, new AggregateUnwindOptions<Account> { PreserveNullAndEmptyArrays = true });
             return await included.ToListAsync();
         }
   
@@ -51,6 +52,7 @@ namespace API.Repository.Repositories
                 aggregate = aggregate.Match(Builders<Account>.Filter.Eq(filter.field, filter.value));
             }
             var included = IncludeOrders(aggregate);
+            included = included.Unwind(field => field.Orders, new AggregateUnwindOptions<Account> { PreserveNullAndEmptyArrays = true });
             return await included.ToListAsync();
         }
         public async Task<bool> Add(Account entity)
