@@ -1,6 +1,6 @@
 ﻿using API.BO.Models.Documents;
-using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,6 @@ namespace API.BO.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        [BsonElement("_id")]
         public string AccountId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

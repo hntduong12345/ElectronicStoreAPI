@@ -12,7 +12,6 @@ namespace API.BO.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        [BsonElement("_id")]
         public string VoucherId { get; set; }
         public decimal TotalPrice { get; set; }
         public int AccountId { get; set; }
