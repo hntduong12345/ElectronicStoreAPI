@@ -1,5 +1,6 @@
 ﻿using API.Repository.Interfaces;
 using API.Repository.Repositories;
+using API.Service;
 using API.Service.Interfaces;
 using API.Service.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -21,11 +22,13 @@ namespace ElectronicStoreAPI.Extensions
 {
     public static class DependencyServices
     {
-        public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration config)
+        public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
-
+            
             #region Service Scope
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IUploadImageService,UploadImageService>();
             services.AddScoped<IImageModificationService,ImageModificationService>();
             services.AddScoped<IComboService, ComboService>();
@@ -36,6 +39,7 @@ namespace ElectronicStoreAPI.Extensions
 
             #region Repository Scope
             services.AddScoped<IComboRepository, ComboRepository>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             #endregion
