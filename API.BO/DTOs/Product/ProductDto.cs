@@ -53,7 +53,7 @@ namespace API.BO.DTOs.Product
         //[AllowNull]
         //public DateTime? SaleEndDate { get; set; } = null;
         [Required]
-        [AllowFileContentType(new string[] { "image/png", "image/jpeg" })]
+        [AllowFileContentType(new string[] { "image/png", "image/jpeg","image/*" })]
         public IFormFile ImageFile { get; set; }
     }
 

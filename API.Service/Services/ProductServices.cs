@@ -168,13 +168,18 @@ namespace API.Service.Services
             if (updateResult is false)
                 throw new Exception("server error with update");
         }
-        public async Task<bool> SetProductSales(Product product, int newCurrentPrice)
+        public async Task<bool> SetProductSales(Product product, int newCurrentPrice, DateTime saleEndDate)
         {
             if(newCurrentPrice <= 0 || newCurrentPrice > product.DefaultPrice)
             {
                 return false;
             }
+            if(saleEndDate <= DateTime.Now) 
+            {
+                return false;
+            }
             product.CurrentPrice = newCurrentPrice;
+            product.SaleEndDate = saleEndDate;
             await _productRepository.Update(product);
             return true;
         }
