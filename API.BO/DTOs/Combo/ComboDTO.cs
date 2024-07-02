@@ -21,4 +21,13 @@ namespace API.BO.DTOs.Combo
         public List<ComboProducts> Products { get; set; }
         public decimal Price { get; set; }
     }
+
+    public class GetComboDTO
+    {
+        public string ComboId { get; set; }
+        public string? Name { get; set; }
+        public List<API.BO.Models.Product> Products { get; set; }
+        public decimal Price { get; set; }
+        public bool IsAvailable { get; set; }
+    }
 }

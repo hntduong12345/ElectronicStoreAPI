@@ -29,6 +29,13 @@ namespace ElectronicStoreAPI.Controllers
             return Ok(result);
         }
 
+        [HttpGet(ApiEndpointConstant.Combo.ComboEndpoint)]
+        public async Task<IActionResult> GetComboById(string id)
+        {
+            var result = await _comboService.GetComboById(id);
+            return Ok(result);
+        }
+
         [HttpPost(ApiEndpointConstant.Combo.CombosEndpoint)]
         public async Task<IActionResult> CreateCombo(CreateComboDTO combo)
         {
