@@ -10,12 +10,14 @@ namespace API.Service.Interfaces
 {
     public interface IAccountService
     {
-        Task<LoginResponseDTO> Login(string input, string password);
-        Task<LoginResponseDTO> Register(string email, string password, string role);
+        Task<LoginResponseDTO> Login(LoginDTO loginDTO);
+        Task<LoginResponseDTO> Register(RegisterDTO registerDTO);
         Task<Account> GetUserInformation(string id);
         Task<List<Account>> GetAccounts();
         Task<Account> GetByEmail(string email);
         Task<Account> GetById(string id);
-        Task<bool> UpdateProfile(string id, AccountUpdateDTO updateDTO);
+        Task<string> UpdateProfile(string id, AccountUpdateDTO updateDTO);
+        Task<string> ChangePassword(string id, ChangePassDTO changePassDTO);
+        Task<string> ChangeStatus(string id);
     }
 }
