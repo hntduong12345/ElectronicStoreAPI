@@ -24,19 +24,19 @@ namespace API.Service.Services
 
         public async Task<List<Voucher>> GetCustomerVouchers(string id)
         {
-            var result = (await _voucherRepository.GetByCondition(1, 10, (p => p.AccountId, id)));
+            var result = (await _voucherRepository.GetByCondition(filters: (p => p.AccountId, id)));
             return result;
         }
         public async Task<Voucher> GetVoucher(string id)
         {
-            var result = (await _voucherRepository.GetByCondition(1, 10, (p => p.VoucherId, id))).FirstOrDefault();
+            var result = (await _voucherRepository.GetByCondition(filters: (p => p.VoucherId, id))).FirstOrDefault();
             return result;
         }
         public async Task<string> AddVoucher(Voucher voucher)
         {
             try
             {
-                var existedCode = (await _voucherRepository.GetByCondition(1, 10, (p => p.VoucherCode, voucher.VoucherCode))).Where(p => p.VoucherId != voucher.VoucherId).FirstOrDefault();
+                var existedCode = (await _voucherRepository.GetByCondition(filters: (p => p.VoucherCode, voucher.VoucherCode))).Where(p => p.VoucherId != voucher.VoucherId).FirstOrDefault();
                 if (existedCode != null) throw new Exception("Voucher Code already exist");
                 await _voucherRepository.Add(voucher);
                 return "";
@@ -62,7 +62,7 @@ namespace API.Service.Services
         {
             try
             {
-                var existedCode = (await _voucherRepository.GetByCondition(1, 10, (p => p.VoucherCode, voucher.VoucherCode))).Where(p => p.VoucherId != voucher.VoucherId).FirstOrDefault();
+                var existedCode = (await _voucherRepository.GetByCondition(filters: (p => p.VoucherCode, voucher.VoucherCode))).Where(p => p.VoucherId != voucher.VoucherId).FirstOrDefault();
                 if (existedCode != null) throw new Exception("Voucher Code already exist");
                 //var voucher = (await _voucherRepository.GetByCondition()).FirstOrDefault();
                 await _voucherRepository.Update(voucher);
@@ -70,7 +70,7 @@ namespace API.Service.Services
             }
             catch (Exception ex)
             {
-                return ex.ToString();
+                return ex.Message;
             }
         }
 
@@ -78,7 +78,7 @@ namespace API.Service.Services
         {
             try
             {
-                var voucher = (await _voucherRepository.GetByCondition(1,10,(p => p.VoucherId, id))).FirstOrDefault();
+                var voucher = (await _voucherRepository.GetByCondition(filters: (p => p.VoucherId, id))).FirstOrDefault();
                 voucher.Type = BO.Models.Enum.VoucherStatusEnum.DISABLED;
                 await _voucherRepository.Update(voucher);
                 return true;
