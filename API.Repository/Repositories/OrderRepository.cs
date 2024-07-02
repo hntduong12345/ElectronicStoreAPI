@@ -20,7 +20,7 @@ namespace API.Repository.Repositories
 
         public OrderRepository(IOptions<MongoDBContext> setting) : base(setting)
         {
-            _orders = _database.GetCollection<Order>("Orders");
+            _orders = _database.GetCollection<Order>("Order");
         }
 
         public async Task ChangeOrderStatus(string id, string status)
@@ -30,7 +30,7 @@ namespace API.Repository.Repositories
             await _orders.ReplaceOneAsync(o => o.OrderId == id, order.Result);
         }
 
-        public async Task CreateOrder(OrderDTO order)
+        public async Task<Order> CreateOrder(OrderDTO order)
         {
             Order newOrder = new Order
             {
@@ -41,6 +41,7 @@ namespace API.Repository.Repositories
                 Status = OrderStatusEnum.Pending.ToString()
             };
             await _orders.InsertOneAsync(newOrder);
+            return newOrder;
         }
 
         public Task<List<Order>> GetAllOrder()
@@ -51,6 +52,12 @@ namespace API.Repository.Repositories
         public Task<Order> GetOrderById(string id)
         {
             return _orders.Find(o => o.OrderId == id).FirstOrDefaultAsync();
+        }
+
+        public async Task<List<Order>> GetOrdersByAccount(string accountId)
+        {
+            List<Order> orders = await _orders.Find(o => o.AccountId == accountId).ToListAsync();
+            return orders;
         }
     }
 }

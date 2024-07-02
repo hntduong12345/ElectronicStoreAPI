@@ -11,6 +11,7 @@ using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
 using System.Reflection;
 using API.BO.AutoMapperProfiles;
+using Payment.Service.VNPay;
 namespace ElectronicStoreAPI.Extensions
 {
     public static class DependencyServices
@@ -29,6 +30,8 @@ namespace ElectronicStoreAPI.Extensions
             services.AddScoped<ICategoryServices,CategoryService>();
             services.AddScoped<IVoucherService, VoucherService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IVNPayService, VNPayService>();
             #endregion
 
             #region Repository Scope

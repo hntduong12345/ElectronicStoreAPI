@@ -136,6 +136,11 @@ namespace API.Service.Services
             }
         }
         //Admin
+        public async Task<List<Account>> GetAccountsByCustomerRole()
+        {
+            var list = await GetListAdmin(AccountRoleEnum.CUSTOMER);
+            return list;
+        }
         public async Task<List<Account>> GetAccountsByAdminRole()
         {
             var list = await GetListAdmin(AccountRoleEnum.ADMIN);

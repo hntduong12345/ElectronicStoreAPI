@@ -23,9 +23,9 @@ namespace API.Service.Services
             await _orderRepository.ChangeOrderStatus(id, status);
         }
 
-        public async Task CreateOrder(OrderDTO order)
+        public async Task<Order> CreateOrder(OrderDTO order)
         {
-            await _orderRepository.CreateOrder(order);
+            return await _orderRepository.CreateOrder(order);
         }
 
         public async Task<List<Order>> GetAllOrder()
@@ -36,6 +36,11 @@ namespace API.Service.Services
         public async Task<Order> GetOrderById(string id)
         {
             return await _orderRepository.GetOrderById(id);
+        }
+
+        public async Task<List<Order>> GetOrdersByAccount(string accountId)
+        {
+            return await _orderRepository.GetOrdersByAccount(accountId);
         }
     }
 }

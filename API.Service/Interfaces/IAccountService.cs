@@ -20,6 +20,7 @@ namespace API.Service.Interfaces
         Task<string> ChangePassword(string id, ChangePassDTO changePassDTO);
 
         //Admin
+        Task<List<Account>> GetAccountsByCustomerRole();
         Task<List<Account>> GetAccountsByAdminRole();
         Task<List<Account>> GetAccountsByStaffRole();
         Task<string> CreateAdminAccount(AccountAdminDTO accountDTO);
