@@ -19,6 +19,13 @@
             public const string OrdersEndpoint = ApiEndpoint + "/orders";
             public const string OrderEndpoint = OrdersEndpoint + "/{id}";
             public const string OrderStatusEndpoint = OrderEndpoint + "/status";
+            public const string OrdersByUserEndpoint = OrdersEndpoint + "/account/{accountId}";
+        }
+
+        public static class Payment
+        {
+            public const string PaymentEndPoint = ApiEndpoint + "/payment";
+            public const string PyamentReturnEndPoint = PaymentEndPoint + "/vnpay-return";
         }
     }
 }
