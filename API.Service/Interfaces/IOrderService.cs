@@ -11,8 +11,9 @@ namespace API.Service.Interfaces
     public interface IOrderService
     {
         public Task<List<Order>> GetAllOrder();
+        public Task<List<Order>> GetOrdersByAccount(string accountId);
         public Task<Order> GetOrderById(string id);
-        public Task CreateOrder(OrderDTO order);
+        public Task<Order> CreateOrder(OrderDTO order);
         public Task ChangeOrderStatus(string id, string status);
     }
 }
