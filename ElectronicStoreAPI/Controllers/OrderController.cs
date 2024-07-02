@@ -9,9 +9,18 @@ namespace ElectronicStoreAPI.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderService _orderService;
-        public OrderController(IOrderService orderService)
+        private readonly IPaymentService _paymentService;
+        public OrderController(IOrderService orderService, IPaymentService paymentService)
         {
             _orderService = orderService;
+            _paymentService = paymentService;
+        }
+
+        [HttpGet(ApiEndpointConstant.Order.OrdersByUserEndpoint)]
+        public async Task<IActionResult> GetOrdersByUser(string accountId)
+        {
+            var result = await _orderService.GetOrdersByAccount(accountId);
+            return Ok(result);
         }
 
         [HttpGet(ApiEndpointConstant.Order.OrdersEndpoint)]
@@ -31,8 +40,23 @@ namespace ElectronicStoreAPI.Controllers
         [HttpPost(ApiEndpointConstant.Order.OrdersEndpoint)]
         public async Task<IActionResult> CreateOrder(OrderDTO order)
         {
-            await _orderService.CreateOrder(order);
-            return Ok("Action success");
+            try
+            {
+                var createdOrder = await _orderService.CreateOrder(order);
+
+                API.BO.DTOs.Payment.PaymentDTO.PaymentLinkResponse response = await _paymentService.CreatePayment(createdOrder);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                if (ex.GetType() == typeof(BadHttpRequestException))
+                {
+                    return BadRequest(ex.Message);
+                }
+
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         [HttpPatch(ApiEndpointConstant.Order.OrderStatusEndpoint)]
