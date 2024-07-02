@@ -1,6 +1,6 @@
 ﻿using API.BO.Models;
 using API.Repository.Interfaces;
-using API.Service.Interface;
+using API.Service.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -36,8 +36,6 @@ namespace API.Service.Services
                 Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
 
             var credential = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
-
-
 
             var token = new JwtSecurityToken(
                 _configuration["Jwt:Issuer"],

@@ -21,6 +21,9 @@ namespace API.BO.Models
         public string Address { get; set; }
         public string PhoneNumber { get; set; }
         public string Role { get; set; }
-        public List<Order> Orders { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public List<string?> OrdersId { get; set; }
+        [BsonIgnoreIfNull]
+        public List<Order?> Orders { get; set; }
     }
 }
