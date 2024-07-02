@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace API.BO.Models.Documents
+namespace API.BO.Models.Enum
 {
-    public class ComboProducts
+    public enum VoucherStatusEnum
     {
-        public string ProductId { get; set; }
+        AVAILABLE, DISABLED
     }
 }

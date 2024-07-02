@@ -1,5 +1,5 @@
 ﻿using API.BO.DTOs.Account;
-using API.Service.Interface;
+using API.Service.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,12 +11,14 @@ namespace ElectronicStoreAPI.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly IAccountService _accountService;
+        private readonly IOrderService _orderService;
         private readonly IMapper _mapper;
 
-        public CustomerController(IAccountService accountService, IMapper mapper)
+        public CustomerController(IAccountService accountService, IMapper mapper, IOrderService orderService)
         {
             _accountService = accountService;
             _mapper = mapper;
+            _orderService = orderService;
         }
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
@@ -66,8 +68,8 @@ namespace ElectronicStoreAPI.Controllers
         public async Task<IActionResult> UpdateProfile(string id, [FromBody] AccountUpdateDTO updateDTO)
         {
             var result = await _accountService.UpdateProfile(id, updateDTO);
-            var response = _mapper.Map<AccountDTO>(result);
-            return Ok(response);
+            if (result) return NoContent();
+            else return BadRequest();
         }
     }
 }

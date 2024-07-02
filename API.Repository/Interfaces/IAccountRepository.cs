@@ -10,12 +10,11 @@ namespace API.Repository.Interfaces
 {
     public interface IAccountRepository
     {
-        Task<IList<Account>> GetAll();
-        Task<IList<Account>> GetByCondition(
-            Expression<Func<Account, bool>> filter = null,
-            Func<IQueryable<Account>, IOrderedQueryable<Account>> orderBy = null,
-            int? skip = null, int? take = null);
-
+        Task<List<Account>> GetAll();
+        Task<List<Account>> GetByCondition(
+            int? skip = null, int? take = null,
+            params (Expression<Func<Account, object>> field, object value)[] filters
+            );
         Task<bool> Add(Account entity);
         Task<bool> Update(Account entity);
         Task<bool> Delete(Account entity);

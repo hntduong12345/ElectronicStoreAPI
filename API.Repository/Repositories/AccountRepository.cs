@@ -21,21 +21,39 @@ namespace API.Repository.Repositories
         {
             _accounts = _database.GetCollection<Account>("Account");
         }
-        public async Task<IList<Account>> GetAll()
+        private IAggregateFluent<Account> IncludeOrders(IAggregateFluent<Account> aggregate)
         {
-            return await _accounts.Find(new BsonDocument()).ToListAsync();
+            var ordersCollection = _database.GetCollection<Order>("Order");
+            var lookup = aggregate.Lookup<Account, Order, Account>(
+                ordersCollection,
+                a => a.OrdersId,
+                b => b.OrderId,
+                a => a.Orders
+                );
+            return lookup;
+        }
+        public async Task<List<Account>> GetAll()
+        {
+            var aggregate = _accounts.Aggregate();
+            var included = IncludeOrders(aggregate);
+            included = included.Unwind(field => field.Orders, new AggregateUnwindOptions<Account> { PreserveNullAndEmptyArrays = true });
+            return await included.ToListAsync();
         }
   
-        public async Task<IList<Account>> GetByCondition(
-            Expression<Func<Account, bool>> filter = null,
-            Func<IQueryable<Account>,
-                IOrderedQueryable<Account>> orderBy = null,
-            int? skip = null, int? take = null)
+        public async Task<List<Account>> GetByCondition(
+            int? skip = null, int? take = null,
+            params (Expression<Func<Account, object>> field, object value)[] filters
+            )
         {
-            IFindFluent<Account, Account> query;
-            if (filter != null) query = _accounts.Find(filter);
-            else query = _accounts.Find(new BsonDocument());
-            return await query.ToListAsync();
+            var aggregate = _accounts.Aggregate();
+
+            foreach (var filter in filters)
+            {
+                aggregate = aggregate.Match(Builders<Account>.Filter.Eq(filter.field, filter.value));
+            }
+            var included = IncludeOrders(aggregate);
+            included = included.Unwind(field => field.Orders, new AggregateUnwindOptions<Account> { PreserveNullAndEmptyArrays = true });
+            return await included.ToListAsync();
         }
         public async Task<bool> Add(Account entity)
         {

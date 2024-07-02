@@ -1,13 +1,13 @@
 ﻿using API.BO.Models;
 using API.Repository.Interfaces;
-using API.Service.Interface;
+using API.Service.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace API.Service
+namespace API.Service.Services
 {
     public class TokenService : ITokenService
     {
@@ -36,8 +36,6 @@ namespace API.Service
                 Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
 
             var credential = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
-
-
 
             var token = new JwtSecurityToken(
                 _configuration["Jwt:Issuer"],

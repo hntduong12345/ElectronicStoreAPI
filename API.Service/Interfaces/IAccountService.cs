@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace API.Service.Interface
+namespace API.Service.Interfaces
 {
     public interface IAccountService
     {
@@ -16,6 +16,6 @@ namespace API.Service.Interface
         Task<List<Account>> GetAccounts();
         Task<Account> GetByEmail(string email);
         Task<Account> GetById(string id);
-        Task<Account> UpdateProfile(string id, AccountUpdateDTO updateDTO);
+        Task<bool> UpdateProfile(string id, AccountUpdateDTO updateDTO);
     }
 }

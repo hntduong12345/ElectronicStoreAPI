@@ -1,6 +1,5 @@
 ﻿using API.Repository.Interfaces;
 using API.Repository.Repositories;
-using API.Service;
 using API.Service.Interfaces;
 using API.Service.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -8,14 +7,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text;
-using Google.Cloud.Storage;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
-using API.Service.Services;
-using System.ComponentModel;
-using API.Service.Interfaces;
-using MongoDB.Driver;
-using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using API.BO.AutoMapperProfiles;
 namespace ElectronicStoreAPI.Extensions
@@ -34,7 +27,7 @@ namespace ElectronicStoreAPI.Extensions
             services.AddScoped<IComboService, ComboService>();
             services.AddScoped<IProductServices, ProductServices>();
             services.AddScoped<ICategoryServices,CategoryService>();
-
+            services.AddScoped<IVoucherService, VoucherService>();
             services.AddScoped<IOrderService, OrderService>();
             #endregion
 
@@ -44,10 +37,11 @@ namespace ElectronicStoreAPI.Extensions
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IVoucherRepository, VoucherRepository>();
             #endregion
 
             #region Third-party Scope
-            var jsonSecretKey = config.GetValue<string>("GoogleBucketServiceAccountKey");
+            var jsonSecretKey = configuration.GetValue<string>("GoogleBucketServiceAccountKey");
             var googleCredential = GoogleCredential.FromJson(jsonSecretKey);
             var googleStorageClient = StorageClient.Create(googleCredential);
             services.AddSingleton(googleCredential);
