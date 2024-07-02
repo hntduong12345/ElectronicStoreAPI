@@ -1,5 +1,6 @@
 ﻿using API.BO.DTOs.Combo;
 using API.BO.Models;
+using API.BO.Models.Documents;
 using API.Repository.Interfaces;
 using API.Service.Interfaces;
 using System;
@@ -13,10 +14,12 @@ namespace API.Service.Services
     public class ComboService : IComboService
     {
         private readonly IComboRepository _comboRepository;
+        private readonly IProductRepository _productRepository;
 
-        public ComboService(IComboRepository comboRepository)
+        public ComboService(IComboRepository comboRepository, IProductRepository productRepository)
         {
             _comboRepository = comboRepository;
+            _productRepository = productRepository;
         }
 
         public async Task ChangeComboStatus(string id)
@@ -44,9 +47,24 @@ namespace API.Service.Services
             return await _comboRepository.GetAllCombo();
         }
 
-        public async Task<Combo> GetComboById(string id)
+        public async Task<GetComboDTO> GetComboById(string id)
         {
-            return await _comboRepository.GetComboById(id);
+            Combo combo = await _comboRepository.GetComboById(id);
+            GetComboDTO responseData = new GetComboDTO()
+            {
+                ComboId = combo.ComboId,
+                Name = combo.Name,
+                IsAvailable = combo.IsAvailable,
+                Price = combo.Price,
+                Products = new List<Product>()
+            };
+
+            foreach(ComboProducts product in combo.Products)
+            {
+                responseData.Products.Add(await _productRepository.Get(product.ProductId));
+            }
+
+            return responseData;
         }
 
         public async Task UpdateCombo(string id, ComboDTO combo)
