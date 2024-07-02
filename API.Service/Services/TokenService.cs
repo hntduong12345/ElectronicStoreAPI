@@ -29,7 +29,7 @@ namespace API.Service.Services
                 new Claim(JwtRegisteredClaimNames.Aud, _configuration["Jwt:Audience"]),
                 new Claim(JwtRegisteredClaimNames.NameId, account.AccountId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, account.Email),
-                new Claim("Role", account.Role),
+                new Claim("Role", account.Role.ToString()),
             };
 
             var securityKey = new SymmetricSecurityKey(
