@@ -8,6 +8,7 @@ using DnsClient;
 using Helper;
 using MongoDB.Bson;
 using System.Linq.Expressions;
+using System.Data;
 namespace API.Service.Services
 {
     public class AccountService : IAccountService
@@ -29,6 +30,10 @@ namespace API.Service.Services
             if (login == null)
             {
                 throw new Exception("Wrong email or password");
+            }
+            if(login.Status == AccountStatusEnum.DEACTIVATED)
+            {
+                throw new Exception("This account has been deactivated");
             }
             string jwtToken;
             jwtToken = _tokenService.CreateToken(login);
@@ -130,6 +135,60 @@ namespace API.Service.Services
                 return ex.Message;
             }
         }
+        //Admin
+        public async Task<List<Account>> GetAccountsByAdminRole()
+        {
+            var list = await GetListAdmin(AccountRoleEnum.ADMIN);
+            return list;
+        }
+
+        public async Task<List<Account>> GetAccountsByStaffRole()
+        {
+            var list = await GetListAdmin(AccountRoleEnum.STAFF);
+            return list;
+        }
+        
+        public async Task<string> CreateAdminAccount(AccountAdminDTO accountDTO)
+        {
+            try
+            {
+                var flag = await CreateAccount(accountDTO,AccountRoleEnum.ADMIN);
+                return flag;
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+        public async Task<string> CreateStaffAccount(AccountAdminDTO accountDTO)
+        {
+            try
+            {
+                var flag = await CreateAccount(accountDTO, AccountRoleEnum.STAFF);
+                return flag;
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+        public async Task<string> UpdateAccountAdmin(string id, AccountAdminDTO accountDTO)
+        {
+            try
+            {
+                var result = (await _accountRepository.GetByCondition(filters: (p => p.AccountId, id))).FirstOrDefault();
+                if (result == null) throw new Exception("Can't find account");
+                result.FirstName = accountDTO.FirstName;
+                result.LastName = accountDTO.LastName;
+                result.Password = accountDTO.Password;
+                await _accountRepository.Update(result);
+                return "";
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
         public async Task<string> ChangeStatus(string id)
         {
             try
@@ -147,6 +206,36 @@ namespace API.Service.Services
             {
                 return ex.Message;
             }
+        }
+        async Task<string> CreateAccount(AccountAdminDTO accountDTO,AccountRoleEnum role)
+        {
+            try
+            {
+                if (!RegexUtil.IsEmail(accountDTO.Email))
+                    throw new Exception("Email is not in correct format");
+                var result = (await _accountRepository.GetByCondition(filters: (p => p.Email, accountDTO.Email))).Any();
+                if (result)
+                    throw new Exception("This email has already existed an account");
+                Account account = new Account()
+                {
+                    Email = accountDTO.Email,
+                    FirstName = accountDTO.FirstName,
+                    LastName = accountDTO.LastName,
+                    Password = accountDTO.Password,
+                    Role = role
+                };
+                var flag = await _accountRepository.Add(account);
+                if (flag) return "";
+                throw new Exception("Can't create account");
+            }
+            catch(Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+        async Task<List<Account>> GetListAdmin(AccountRoleEnum role)
+        {
+            return await _accountRepository.GetByCondition(filters: (p => p.Role, role));
         }
 
     }

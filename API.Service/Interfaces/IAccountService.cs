@@ -18,6 +18,13 @@ namespace API.Service.Interfaces
         Task<Account> GetById(string id);
         Task<string> UpdateProfile(string id, AccountUpdateDTO updateDTO);
         Task<string> ChangePassword(string id, ChangePassDTO changePassDTO);
+
+        //Admin
+        Task<List<Account>> GetAccountsByAdminRole();
+        Task<List<Account>> GetAccountsByStaffRole();
+        Task<string> CreateAdminAccount(AccountAdminDTO accountDTO);
+        Task<string> CreateStaffAccount(AccountAdminDTO accountDTO);
+        Task<string> UpdateAccountAdmin(string id, AccountAdminDTO accountDTO);
         Task<string> ChangeStatus(string id);
     }
 }
