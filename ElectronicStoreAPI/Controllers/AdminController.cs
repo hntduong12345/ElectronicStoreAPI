@@ -27,6 +27,14 @@ namespace ElectronicStoreAPI.Controllers
             var response = _mapper.Map<List<AccountDTO>>(result);
             return Ok(response);
         }
+        [Route("admin/get-all-customer")]
+        [HttpGet]
+        public async Task<IActionResult> GetAllCustomer()
+        {
+            var result = await _accountService.GetAccountsByCustomerRole();
+            var response = _mapper.Map<List<AccountDTO>>(result);
+            return Ok(response);
+        }
         [Route("admin/get-all-admin")]
         [HttpGet]
         public async Task<IActionResult> GetAllAdmin()
