@@ -25,6 +25,7 @@ namespace API.Service.Interfaces
         Task<List<Account>> GetAccountsByStaffRole();
         Task<string> CreateAdminAccount(AccountAdminDTO accountDTO);
         Task<string> CreateStaffAccount(AccountAdminDTO accountDTO);
+        Task<string> DeleteAccount(string id);
         Task<string> UpdateAccountAdmin(string id, AccountAdminDTO accountDTO);
         Task<string> ChangeStatus(string id);
     }
