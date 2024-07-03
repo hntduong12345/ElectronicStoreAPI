@@ -1,4 +1,5 @@
 using API.BO.Models;
+using API.Service;
 using ElectronicStoreAPI.Constants;
 using ElectronicStoreAPI.Extensions;
 using ElectronicStoreAPI.Middlewares;
@@ -20,6 +21,7 @@ builder.Services.AddServices(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddConfigSwagger();
 
+builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.Configure<MongoDBContext>(builder.Configuration.GetSection("MongoDbSection"));
 
 var app = builder.Build();
@@ -31,7 +33,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 

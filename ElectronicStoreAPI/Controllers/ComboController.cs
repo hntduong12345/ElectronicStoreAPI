@@ -29,32 +29,39 @@ namespace ElectronicStoreAPI.Controllers
             return Ok(result);
         }
 
+        [HttpGet(ApiEndpointConstant.Combo.ComboEndpoint)]
+        public async Task<IActionResult> GetComboById(string id)
+        {
+            var result = await _comboService.GetComboById(id);
+            return Ok(result);
+        }
+
         [HttpPost(ApiEndpointConstant.Combo.CombosEndpoint)]
         public async Task<IActionResult> CreateCombo(CreateComboDTO combo)
         {
             await _comboService.CreateCombo(combo);
-            return Ok("Action success");
+            return Ok("Action successfully");
         }
 
         [HttpPatch(ApiEndpointConstant.Combo.ComboEndpoint)]
         public async Task<IActionResult> UpdateCombo(string id, ComboDTO combo)
         {
             await _comboService.UpdateCombo(id, combo);
-            return Ok();
+            return Ok("Action successfully");
         }
 
         [HttpPatch(ApiEndpointConstant.Combo.ComboStatusEndpoint)]
         public async Task<IActionResult> ChangeComboStatus(string id)
         {
             await _comboService.ChangeComboStatus(id);
-            return Ok();
+            return Ok("Action successfully");
         }
 
         [HttpDelete(ApiEndpointConstant.Combo.ComboEndpoint)]
         public async Task<IActionResult> DeleteCombo(string id)
         {
             await _comboService.DeleteCombo(id);
-            return Ok();
+            return Ok("Action successfully");
         }
     }
 }

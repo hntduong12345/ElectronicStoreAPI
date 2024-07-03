@@ -8,11 +8,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\API.Repository\API.Repository.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\PaymentService\Payment.Service.csproj" />
+    <ProjectReference Include="..\Utilities\Helper.csproj" />
     <PackageReference Include="Google.Cloud.Storage.V1" Version="4.10.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="2.1.8" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Interface\" />
+  </ItemGroup>
 </Project>
