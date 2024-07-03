@@ -54,8 +54,6 @@ namespace API.Service.Services
                         Email = registerDTO.Email,
                         FirstName = registerDTO.FirstName,
                         LastName = registerDTO.LastName,
-                        Address = registerDTO.Address,
-                        PhoneNumber = registerDTO.PhoneNumber,
                         Password = registerDTO.Password,
                         Role = AccountRoleEnum.CUSTOMER
                     };
