@@ -46,6 +46,8 @@ namespace API.Service.Services
         {
             try
             {
+                if (!RegexUtil.IsEmail(registerDTO.Email))
+                    throw new Exception("Email is not in correct format");
                 bool checkedExist = (await _accountRepository.GetByCondition(filters: (p => p.Email, registerDTO.Email))).Any();
                 if (!checkedExist)
                 {
@@ -185,6 +187,21 @@ namespace API.Service.Services
                 result.LastName = accountDTO.LastName;
                 result.Password = accountDTO.Password;
                 await _accountRepository.Update(result);
+                return "";
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+        public async Task<string> DeleteAccount(string id)
+        {
+            try
+            {
+                var result = (await _accountRepository.GetByCondition(filters: (p => p.AccountId, id))).FirstOrDefault();
+                if (result == null) throw new Exception("Can't find account");
+                if (result.Role == AccountRoleEnum.CUSTOMER) throw new Exception("Can't delete customer account");
+                await _accountRepository.Delete(result);
                 return "";
             }
             catch (Exception ex)
