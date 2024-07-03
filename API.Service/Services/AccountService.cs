@@ -26,12 +26,12 @@ namespace API.Service.Services
         public async Task<LoginResponseDTO> Login(LoginDTO loginDTO)
         {
             Expression<Func<Account, object>> filter = RegexUtil.IsEmail(loginDTO.Input) ? p => p.Email : p => p.PhoneNumber;
-            var login = (await _accountRepository.GetByCondition( 1, 10, (filter, loginDTO.Input), (p => p.Password, loginDTO.Password))).FirstOrDefault();
+            var login = (await _accountRepository.GetByCondition(1, 10, (filter, loginDTO.Input), (p => p.Password, loginDTO.Password))).FirstOrDefault();
             if (login == null)
             {
                 throw new Exception("Wrong email or password");
             }
-            if(login.Status == AccountStatusEnum.DEACTIVATED)
+            if (login.Status == AccountStatusEnum.DEACTIVATED)
             {
                 throw new Exception("This account has been deactivated");
             }
@@ -44,8 +44,6 @@ namespace API.Service.Services
         }
         public async Task<LoginResponseDTO> Register(RegisterDTO registerDTO)
         {
-            try
-            {
                 if (!RegexUtil.IsEmail(registerDTO.Email))
                     throw new Exception("Email is not in correct format");
                 bool checkedExist = (await _accountRepository.GetByCondition(filters: (p => p.Email, registerDTO.Email))).Any();
@@ -76,11 +74,6 @@ namespace API.Service.Services
                 {
                     throw new Exception("This email has already being used!");
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
         }
         public async Task<Account> GetUserInformation(string id)
         {
