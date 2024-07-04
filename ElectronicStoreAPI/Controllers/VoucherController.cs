@@ -53,12 +53,5 @@ namespace ElectronicStoreAPI.Controllers
             if (result == "") return Ok();
             else return BadRequest(result);
         }
-        [HttpPut("/disable-voucher/{id}")]
-        public async Task<IActionResult> DisableVoucher(string id)
-        {
-            var result = await _voucherService.DisableVoucher(id);
-            if (result) return Ok();
-            else return BadRequest();
-        }
     }
 }

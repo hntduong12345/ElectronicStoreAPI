@@ -28,7 +28,7 @@ namespace API.BO.Models
         public string VoucherCode { get; set; }
         public DateTime ExpiryDate { get; set; }
         public DateTime CreatedDate { get; set; }
-        public VoucherStatusEnum Type { get; set; }
+        public VoucherStatusEnum Status { get; set; }
         public decimal Percentage { get; set; }
         public decimal MoneyThreshold { get; set; }
         public bool IsAvailable { get; set; }

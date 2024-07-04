@@ -73,20 +73,5 @@ namespace API.Service.Services
                 return ex.Message;
             }
         }
-
-        public async Task<bool> DisableVoucher(string id)
-        {
-            try
-            {
-                var voucher = (await _voucherRepository.GetByCondition(filters: (p => p.VoucherId, id))).FirstOrDefault();
-                voucher.Type = BO.Models.Enum.VoucherStatusEnum.DISABLED;
-                await _voucherRepository.Update(voucher);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
     }
 }
