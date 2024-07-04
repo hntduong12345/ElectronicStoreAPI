@@ -74,11 +74,10 @@ namespace API.BO.DTOs.Product
         public int StorageAmount { get; set; }
         //[Range(0, int.MaxValue)]
         //public decimal CurrentPrice { get; set; } = 0;
-        public bool IsOnSale { get; set; }
-        [AllowNull]
-        [IsDateTimeAfterNow]
-        public DateTime? SaleEndDate { get; set; }
-        [AllowNull]
+        //public bool IsOnSale { get; set; }
+        //[AllowNull]
+        //[IsDateTimeAfterNow]
+        //public DateTime? SaleEndDate { get; set; }
         [AllowFileContentType(new string[] { "image/png", "image/jpeg" })]
         public IFormFile? ImageFile { get; set; }
     }

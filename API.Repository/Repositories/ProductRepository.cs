@@ -62,7 +62,7 @@ namespace API.Repository.Repositories
         }
         public Task<bool> Update(Product product)
         {
-            var updateResult = _productsCollection.ReplaceOne(c => c.CategoryId.Equals(product.CategoryId), product);
+            var updateResult = _productsCollection.ReplaceOne(c => c.ProductId.Equals(product.ProductId), product);
             if (updateResult.IsAcknowledged is false)
                 return Task.FromResult(false);
             return Task.FromResult(true);

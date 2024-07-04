@@ -156,13 +156,13 @@ namespace API.Service.Services
             }
             getProduct.ProductName = updateProductDto.ProductName is null ? getProduct.ProductName : updateProductDto.ProductName;
             getProduct.DefaultPrice = updateProductDto.DefaultPrice;
-            //tryGetProduct.CurrentPrice = ...;
-            getProduct.ProductName = updateProductDto.Description is null ? getProduct.Description : updateProductDto.Description;
-            getProduct.ProductName = updateProductDto.Manufacturer is null ? getProduct.Manufacturer : updateProductDto.Manufacturer;
-            getProduct.ProductName = updateProductDto.CategoryId is null ? getProduct.CategoryId : updateProductDto.CategoryId;
+            getProduct.CurrentPrice = updateProductDto.DefaultPrice ;
+            getProduct.Description = updateProductDto.Description is null ? getProduct.Description : updateProductDto.Description;
+            getProduct.Manufacturer = updateProductDto.Manufacturer is null ? getProduct.Manufacturer : updateProductDto.Manufacturer;
+            getProduct.CategoryId = updateProductDto.CategoryId is null ? getProduct.CategoryId : updateProductDto.CategoryId;
             getProduct.StorageAmount = updateProductDto.StorageAmount;
-            getProduct.IsOnSale = updateProductDto.IsOnSale;
-            getProduct.SaleEndDate = updateProductDto.SaleEndDate is null ? getProduct.SaleEndDate : updateProductDto.SaleEndDate;
+            //getProduct.IsOnSale = updateProductDto.IsOnSale;
+            //getProduct.SaleEndDate = updateProductDto.SaleEndDate is null ? getProduct.SaleEndDate : updateProductDto.SaleEndDate;
             getProduct.RelativeUrl = newImageUrl is null ? getProduct.RelativeUrl : newImageUrl;
             var updateResult = await _productRepository.Update(getProduct);
             if (updateResult is false)
@@ -170,18 +170,19 @@ namespace API.Service.Services
         }
         public async Task<bool> SetProductSales(Product product, int newCurrentPrice, DateTime saleEndDate)
         {
-            if(newCurrentPrice <= 0 || newCurrentPrice > product.DefaultPrice)
-            {
-                return false;
-            }
-            if(saleEndDate <= DateTime.Now) 
-            {
-                return false;
-            }
-            product.CurrentPrice = newCurrentPrice;
-            product.SaleEndDate = saleEndDate;
-            await _productRepository.Update(product);
-            return true;
+            //if(newCurrentPrice <= 0 || newCurrentPrice > product.DefaultPrice)
+            //{
+            //    return false;
+            //}
+            //if(saleEndDate <= DateTime.Now) 
+            //{
+            //    return false;
+            //}
+            //product.CurrentPrice = newCurrentPrice;
+            //product.SaleEndDate = saleEndDate;
+            //await _productRepository.Update(product);
+            //return true;
+            throw new NotImplementedException();
         }
         public async Task<bool> OnBuyProduct(Product product, int amount)
         {
