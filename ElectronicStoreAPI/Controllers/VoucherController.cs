@@ -20,30 +20,21 @@ namespace ElectronicStoreAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("/get-all-vouchers")]
+        [HttpGet("Voucher/get-all")]
         public async Task<IActionResult> GetAllVoucher()
         {
             var result = await _voucherService.GetAllVouchers();
             var response = _mapper.Map<List<VoucherDTO>>(result);
             return Ok(response);
         }
-        [HttpGet("/get-voucher/{id}")]
+        [HttpGet("Voucher/get-voucher/{id}")]
         public async Task<IActionResult> GetVoucher(string id)
         {
             var result = await _voucherService.GetVoucher(id);
             var response = _mapper.Map<VoucherDTO>(result);
             return Ok(response);
         }
-
-        [HttpGet("/get-customer-vouchers/{id}")]
-        public async Task<IActionResult> GetAllCustomerVoucher(string id)
-        {
-            var result = await _voucherService.GetCustomerVouchers(id);
-            var response = _mapper.Map<List<VoucherDTO>>(result);
-            return Ok(response);
-        }
-
-        [HttpPost("/create-voucher/{accountId}")]
+        [HttpPost("Voucher/create/{accountId}")]
         public async Task<IActionResult> CreateVoucher(string accountId, [FromBody] VoucherCreateDTO createForm)
         {
             var mappedCreate = _mapper.Map<Voucher>(createForm);
@@ -53,7 +44,7 @@ namespace ElectronicStoreAPI.Controllers
             if(result == "") return Ok();
             else return BadRequest(result);
         }
-        [HttpPut("/update-voucher/{id}")]
+        [HttpPut("Voucher/update/{id}")]
         public async Task<IActionResult> UpdateVoucher(string id, [FromBody] VoucherUpdateDTO updateForm)
         {
             var mappedUpdate = _mapper.Map<Voucher>(updateForm);
