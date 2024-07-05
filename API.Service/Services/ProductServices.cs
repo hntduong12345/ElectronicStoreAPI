@@ -99,11 +99,11 @@ namespace API.Service.Services
             }));
             var facetResult = pipeline.Facet(countFacet, dataFacet).ToList();
             var data = facetResult.First().Facets.First(f => f.Name == "values").Output<Product>().ToList();
-            var count = facetResult.First().Facets.First(f => f.Name == "count").Output<AggregateCountResult>().First().Count;
+            var count = facetResult.First().Facets.First(f => f.Name == "count").Output<AggregateCountResult>().FirstOrDefault()?.Count;
             //var result = await pipeline.ToListAsync();
             return new PagingResponseDto<Product>
             {
-                Total = (int) count,
+                Total = count == null ? 0 :(int) count,
                 Values = data
             };
         }
@@ -123,10 +123,10 @@ namespace API.Service.Services
             }));
             var facetResult = pipeline.Facet(countFacet, dataFacet).ToList();
             var data = facetResult.First().Facets.First(f => f.Name == "values").Output<Product>().ToList();
-            var count = facetResult.First().Facets.First(f => f.Name == "count").Output<AggregateCountResult>().First().Count;
+            var count = facetResult.First().Facets.First(f => f.Name == "count").Output<AggregateCountResult>().FirstOrDefault()?.Count;
             return new PagingResponseDto<Product>
             {
-                Total = (int)count,
+                Total = count == null ? 0 :(int)count,
                 Values = data
             };//await _productRepository.GetRange(start, take);  
         }

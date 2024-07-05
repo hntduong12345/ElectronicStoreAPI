@@ -34,7 +34,7 @@ namespace ElectronicStoreAPI.Controllers
             return Ok(_mapper.Map<CategoryDto>(getResult));
         }
         [HttpPost]
-        public async Task<ActionResult> Create([FromForm] CreateCategoryDto createCategoryDto)
+        public async Task<ActionResult> Create([FromBody] CreateCategoryDto createCategoryDto)
         {
             var createResult = await _categoryServices.Create(createCategoryDto);
             if (createResult == null)
