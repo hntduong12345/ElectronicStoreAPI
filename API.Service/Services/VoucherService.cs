@@ -43,9 +43,14 @@ namespace API.Service.Services
         public async Task UpdateVoucher(Voucher voucher)
         {
             var existedCode = (await _voucherRepository.GetByCondition(filters: (p => p.VoucherCode, voucher.VoucherCode))).Where(p => p.VoucherId != voucher.VoucherId).FirstOrDefault();
-            if (existedCode == null) throw new Exception("Voucher Code doesn't exist");
+            if (existedCode != null) throw new Exception("Voucher Code already exist");
+            var result = (await _voucherRepository.GetByCondition(filters: (p => p.VoucherId, voucher.VoucherId))).FirstOrDefault();
+            result.ExpiryDate = voucher.ExpiryDate;
+            result.Percentage = voucher.Percentage;
+            result.IsAvailable = voucher.IsAvailable;
+            result.VoucherCode = voucher.VoucherCode;
             //var voucher = (await _voucherRepository.GetByCondition()).FirstOrDefault();
-            await _voucherRepository.Update(voucher);
+            await _voucherRepository.Update(result);
         }
     }
 }
