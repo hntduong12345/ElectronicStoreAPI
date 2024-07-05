@@ -10,11 +10,9 @@ namespace API.Service.Interfaces
     public interface IVoucherService
     {
         Task<List<Voucher>> GetAllVouchers();
-        Task<List<Voucher>> GetCustomerVouchers(string id);
-        Task<string> AddVoucher(Voucher voucher);
-        Task<bool> RemoveVoucher(Voucher voucher);
-        Task<string> UpdateVoucher(Voucher voucher);
+        Task AddVoucher(Voucher voucher);
+        Task UpdateVoucher(Voucher voucher);
+        Task RemoveVoucher(string id);
         Task<Voucher> GetVoucher(string id);
-        Task<bool> DisableVoucher(string id);
     }
 }

@@ -2,6 +2,7 @@
 using API.BO.Models;
 using API.Service.Interfaces;
 using AutoMapper;
+using ElectronicStoreAPI.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -37,28 +38,46 @@ namespace ElectronicStoreAPI.Controllers
         [HttpPost("Voucher/create/{accountId}")]
         public async Task<IActionResult> CreateVoucher(string accountId, [FromBody] VoucherCreateDTO createForm)
         {
-            var mappedCreate = _mapper.Map<Voucher>(createForm);
-            mappedCreate.AccountId = accountId;
-            //mappedCreate.AccountId = ObjectId.Parse(accountId);
-            var result = await _voucherService.AddVoucher(mappedCreate);
-            if(result == "") return Ok();
-            else return BadRequest(result);
+            try
+            {
+                var mappedCreate = _mapper.Map<Voucher>(createForm);
+                mappedCreate.AccountId = accountId;
+                mappedCreate.CreatedDate = DateTime.Now.ToString(DateConstant.DateFormat);
+                await _voucherService.AddVoucher(mappedCreate);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpPut("Voucher/update/{id}")]
         public async Task<IActionResult> UpdateVoucher(string id, [FromBody] VoucherUpdateDTO updateForm)
         {
-            var mappedUpdate = _mapper.Map<Voucher>(updateForm);
-            mappedUpdate.VoucherId = id;
-            var result = await _voucherService.UpdateVoucher(mappedUpdate);
-            if (result == "") return Ok();
-            else return BadRequest(result);
+            try
+            {
+                var mappedUpdate = _mapper.Map<Voucher>(updateForm);
+                mappedUpdate.VoucherId = id;
+                await _voucherService.UpdateVoucher(mappedUpdate);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
-        [HttpPut("/disable-voucher/{id}")]
-        public async Task<IActionResult> DisableVoucher(string id)
+        [HttpDelete("Voucher/delete/{id}")]
+        public async Task<IActionResult> DeleteVoucher(string id)
         {
-            var result = await _voucherService.DisableVoucher(id);
-            if (result) return Ok();
-            else return BadRequest();
+            try
+            {
+                await _voucherService.RemoveVoucher(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

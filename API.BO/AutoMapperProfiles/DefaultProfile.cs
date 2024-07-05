@@ -17,6 +17,7 @@ namespace API.BO.AutoMapperProfiles
         {           
         }   
     }
+    
     public class CategoryProfile : Profile 
     {
         public CategoryProfile()
