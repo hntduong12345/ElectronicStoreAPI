@@ -12,8 +12,7 @@ namespace API.BO.DTOs.Voucher
     public class VoucherCreateDTO
     {
         public string VoucherCode { get; set; }
-        public DateTime ExpiryDate { get; set; } = DateTime.Now.AddMonths(1);
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public string ExpiryDate { get; set; } 
         public decimal Percentage { get; set; }
         public bool IsAvailable { get; set; }
     }

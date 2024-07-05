@@ -2,6 +2,7 @@
 using API.BO.Models;
 using API.Service.Interfaces;
 using AutoMapper;
+using ElectronicStoreAPI.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -41,7 +42,7 @@ namespace ElectronicStoreAPI.Controllers
             {
                 var mappedCreate = _mapper.Map<Voucher>(createForm);
                 mappedCreate.AccountId = accountId;
-                //mappedCreate.AccountId = ObjectId.Parse(accountId);
+                mappedCreate.CreatedDate = DateTime.Now.ToString(DateConstant.DateFormat);
                 await _voucherService.AddVoucher(mappedCreate);
                 return Ok();
             }
