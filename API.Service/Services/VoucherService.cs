@@ -21,72 +21,36 @@ namespace API.Service.Services
             var result = await _voucherRepository.GetAll();
             return result;
         }
-
-        public async Task<List<Voucher>> GetCustomerVouchers(string id)
-        {
-            var result = (await _voucherRepository.GetByCondition(filters: (p => p.AccountId, id)));
-            return result;
-        }
         public async Task<Voucher> GetVoucher(string id)
         {
             var result = (await _voucherRepository.GetByCondition(filters: (p => p.VoucherId, id))).FirstOrDefault();
             return result;
         }
-        public async Task<string> AddVoucher(Voucher voucher)
+        public async Task AddVoucher(Voucher voucher)
         {
-            try
-            {
-                var existedCode = (await _voucherRepository.GetByCondition(filters: (p => p.VoucherCode, voucher.VoucherCode))).Where(p => p.VoucherId != voucher.VoucherId).FirstOrDefault();
-                if (existedCode != null) throw new Exception("Voucher Code already exist");
-                await _voucherRepository.Add(voucher);
-                return "";
-            }
-            catch (Exception ex)
-            {
-                return ex.ToString();
-            }
+            if (voucher.Percentage > 100) throw new Exception("Voucher percentage can only be max 100%");
+            var existedCode = (await _voucherRepository.GetByCondition(filters: (p => p.VoucherCode, voucher.VoucherCode))).Where(p => p.VoucherId != voucher.VoucherId).FirstOrDefault();
+            if (existedCode != null) throw new Exception("Voucher Code already exist");
+            await _voucherRepository.Add(voucher);
         }
-        public async Task<bool> RemoveVoucher(Voucher voucher)
+        public async Task RemoveVoucher(string id)
         {
-            try
-            {
-                await _voucherRepository.Remove(voucher);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            var existedCode = (await _voucherRepository.GetByCondition(filters: (p => p.VoucherId, id))).FirstOrDefault();
+            if (existedCode == null) throw new Exception("Voucher Code doesn't exist");
+            
+            await _voucherRepository.Remove(existedCode);
         }
-        public async Task<string> UpdateVoucher(Voucher voucher)
+        public async Task UpdateVoucher(Voucher voucher)
         {
-            try
-            {
-                var existedCode = (await _voucherRepository.GetByCondition(filters: (p => p.VoucherCode, voucher.VoucherCode))).Where(p => p.VoucherId != voucher.VoucherId).FirstOrDefault();
-                if (existedCode != null) throw new Exception("Voucher Code already exist");
-                //var voucher = (await _voucherRepository.GetByCondition()).FirstOrDefault();
-                await _voucherRepository.Update(voucher);
-                return "";
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
-        }
-
-        public async Task<bool> DisableVoucher(string id)
-        {
-            try
-            {
-                var voucher = (await _voucherRepository.GetByCondition(filters: (p => p.VoucherId, id))).FirstOrDefault();
-                voucher.Type = BO.Models.Enum.VoucherStatusEnum.DISABLED;
-                await _voucherRepository.Update(voucher);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            var existedCode = (await _voucherRepository.GetByCondition(filters: (p => p.VoucherCode, voucher.VoucherCode))).Where(p => p.VoucherId != voucher.VoucherId).FirstOrDefault();
+            if (existedCode != null) throw new Exception("Voucher Code already exist");
+            var result = (await _voucherRepository.GetByCondition(filters: (p => p.VoucherId, voucher.VoucherId))).FirstOrDefault();
+            result.ExpiryDate = voucher.ExpiryDate;
+            result.Percentage = voucher.Percentage;
+            result.IsAvailable = voucher.IsAvailable;
+            result.VoucherCode = voucher.VoucherCode;
+            //var voucher = (await _voucherRepository.GetByCondition()).FirstOrDefault();
+            await _voucherRepository.Update(result);
         }
     }
 }

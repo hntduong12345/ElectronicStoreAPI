@@ -43,14 +43,14 @@ namespace ElectronicStoreAPI.Controllers
             var response = _mapper.Map<List<AccountDTO>>(result);
             return Ok(response);
         }
-        [Route("admin/get-all-staff")]
+        /*[Route("admin/get-all-staff")]
         [HttpGet]
         public async Task<IActionResult> GetAllStaff()
         {
             var result = await _accountService.GetAccountsByStaffRole();
             var response = _mapper.Map<List<AccountDTO>>(result);
             return Ok(response);
-        }
+        }*/
    
         [HttpPost("admin/create-admin")]
         public async Task<IActionResult> CreateAdmin([FromBody] AccountAdminDTO accountDTO)
@@ -59,13 +59,22 @@ namespace ElectronicStoreAPI.Controllers
             if (String.IsNullOrEmpty(result)) return Ok();
             else return BadRequest(result);
         }
-        [HttpPost("admin/create-staff")]
+        /*[HttpPost("admin/create-staff")]
         public async Task<IActionResult> CreateStaff([FromBody] AccountAdminDTO accountDTO)
         {
             var result = await _accountService.CreateStaffAccount(accountDTO);
             if (String.IsNullOrEmpty(result)) return Ok();
             else return BadRequest(result);
+        }*/
+        [Route("admin/delete-account/{id}")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAccount(string id)
+        {
+            var result = await _accountService.DeleteAccount(id);
+            if (String.IsNullOrEmpty(result)) return Ok();
+            else return BadRequest(result);
         }
+      
         [Route("admin/change-status/{id}")]
         [HttpPut]
         public async Task<IActionResult> ChangeStatus(string id)

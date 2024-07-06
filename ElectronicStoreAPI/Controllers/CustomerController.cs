@@ -24,9 +24,16 @@ namespace ElectronicStoreAPI.Controllers
         public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
         {
             if (loginDTO != null) {
-                var response = await _accountService.Login(loginDTO);
 
-                return Ok(response);
+                try
+                {
+                    var response = await _accountService.Login(loginDTO);
+                    return Ok(response);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
             return NotFound();
         }
@@ -37,8 +44,15 @@ namespace ElectronicStoreAPI.Controllers
         {
             if (registerDTO != null)
             {
-                var response = await _accountService.Register(registerDTO);
-                return Ok(response);
+                try
+                {
+                    var response = await _accountService.Register(registerDTO);
+                    return Ok(response);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
             return NotFound();
         }
