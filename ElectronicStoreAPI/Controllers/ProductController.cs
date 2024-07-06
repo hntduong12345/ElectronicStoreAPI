@@ -1,4 +1,5 @@
-﻿using API.BO.DTOs;
+﻿using Amazon.Runtime.Internal;
+using API.BO.DTOs;
 using API.BO.DTOs.Product;
 using API.BO.Models;
 using API.Repository.Repositories;
@@ -90,6 +91,31 @@ namespace ElectronicStoreAPI.Controllers
         public async Task<ActionResult> Update([FromRoute] string productId, [FromForm] UpdateProductDto updateProductDto)
         {
             await _productServices.Update(productId, updateProductDto);
+            return Ok();
+        }
+        [HttpPut("Storage/{productId}")]
+        public async Task<ActionResult> UpdateInventory([FromRoute] string productId, [FromForm] int StorageAmount)
+        {
+            if(StorageAmount < 0 || StorageAmount > 10000000)
+            {
+                return BadRequest("Storage amount is invalid, it can be >=0 and less than 100mil ");
+            }
+            var tryGetProduct = await _productServices.Get(productId);
+            if (tryGetProduct == null)
+                return BadRequest("not found product to update storage ");
+            tryGetProduct.StorageAmount = StorageAmount;
+            var updateProductDto = new UpdateProductDto()
+            {
+                CategoryId = tryGetProduct.CategoryId,
+                DefaultPrice = tryGetProduct.DefaultPrice,
+                Description = tryGetProduct.Description,
+                //IsOnSale = tryGetProduct.IsOnSale,
+                //SaleEndDate = tryGetProduct.SaleEndDate,
+                ProductName = tryGetProduct.ProductName,
+                Manufacturer = tryGetProduct.Manufacturer,
+                StorageAmount = tryGetProduct.StorageAmount,
+            };
+            await _productServices.Update(tryGetProduct.ProductId, updateProductDto);
             return Ok();
         }
         [HttpDelete("{productId}")]
