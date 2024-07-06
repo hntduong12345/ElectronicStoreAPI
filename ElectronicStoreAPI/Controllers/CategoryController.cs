@@ -44,7 +44,7 @@ namespace ElectronicStoreAPI.Controllers
         [HttpPut("{categoryId}")]
         public async Task<ActionResult> Update(
             [FromRoute] string categoryId,
-            [FromForm] UpdateCategoryDto updateCategoryDto)
+            [FromBody] UpdateCategoryDto updateCategoryDto)
         {
             var updateresult = await _categoryServices.Update(categoryId, updateCategoryDto);
             if (updateresult is false)
