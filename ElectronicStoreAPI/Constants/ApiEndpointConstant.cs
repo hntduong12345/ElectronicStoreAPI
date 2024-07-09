@@ -4,7 +4,7 @@
     {
         public const string RootEndPoint = "/api";
         public const string ApiVersion = "/v1";
-        public const string ApiEndpoint = RootEndPoint + ApiVersion;
+        public const string ApiEndpoint = RootEndPoint;
 
         public static class Combo
         {
