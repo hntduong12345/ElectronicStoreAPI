@@ -20,7 +20,7 @@ namespace API.Service.Interfaces
         Task Update(string categoryId, UpdateProductDto updateCategoryDto);
         Task Delete(string categoryId);
 
-        Task<bool> SetProductSales(Product product, int newCurrentPrice);
+        Task<bool> SetProductSales(Product product, int newCurrentPrice, DateTime saleEndDate);
         Task<bool> OnBuyProduct(Product product, int amount);
 
 
