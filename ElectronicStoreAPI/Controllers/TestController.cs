@@ -24,7 +24,7 @@ namespace ElectronicStoreAPI.Controllers
         {
             _modificationService = modificationService;
             _uploadImageService = uploadImageService;
-            _categoryRepository = new CategoryRepository(setting);
+            //_categoryRepository = new CategoryRepository(setting);
             _productRepository = new ProductRepository(setting);
 
         }

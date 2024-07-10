@@ -17,5 +17,6 @@ namespace API.Repository.Interfaces
         Task Create(Product product);
         Task<bool> Update(Product product);
         Task<bool> Delete(Product product);
+        Task<bool> DeleteRange(IList<Product> products);
     }
 }

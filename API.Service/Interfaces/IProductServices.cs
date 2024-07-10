@@ -19,8 +19,9 @@ namespace API.Service.Interfaces
         Task<Product> Create(CreateProductDto createCategoryDto);
         Task Update(string categoryId, UpdateProductDto updateCategoryDto);
         Task Delete(string categoryId);
+        Task<bool> DeleteRange(IList<Product> productsTobeDeleted);
 
-        Task<bool> SetProductSales(Product product, int newCurrentPrice, DateTime saleEndDate);
+		Task<bool> SetProductSales(Product product, int newCurrentPrice, DateTime saleEndDate);
         Task<bool> OnBuyProduct(Product product, int amount);
 
 

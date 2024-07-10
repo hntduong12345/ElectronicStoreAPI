@@ -70,7 +70,20 @@ namespace API.Service.Services
                 throw new Exception("cannot found product with the provided id");
             await _productRepository.Delete(getProduct);
         }
-
+        public async Task<bool> DeleteRange(IList<Product> productsTobeDeleted)
+        {
+            var listImagesToDelete = productsTobeDeleted.Select(p => p.RelativeUrl);
+            var deleteResult =  await _productRepository.DeleteRange(productsTobeDeleted);
+		    if(deleteResult is false)
+            {
+                return false;
+            }
+            foreach(var imagesLinkToDelete in listImagesToDelete)
+            {
+                Task.Run( () => { _uploadImageService.DeleteImage(imagesLinkToDelete); });
+            }
+            return true;
+        }
         public async Task<Product?> Get(string id)
         {
             return await _productRepository.Get(id);

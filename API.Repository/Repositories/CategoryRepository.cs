@@ -14,9 +14,11 @@ namespace API.Repository.Repositories
     public class CategoryRepository : BaseRepository<CategoryRepository> , ICategoryRepository
     {
         private IMongoCollection<Category> _category;
+        public IClientSessionHandle _session { get; set; }
         public CategoryRepository(IOptions<MongoDBContext> setting) : base(setting)
         {
             _category = _database.GetCollection<Category>("Category");
+            _session = _client.StartSession();
         }
         public async Task<IList<Category>> GetAll()
         {

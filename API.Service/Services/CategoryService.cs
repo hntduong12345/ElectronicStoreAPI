@@ -15,11 +15,12 @@ namespace API.Service.Services
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IProductRepository _productRepository;
-
-        public CategoryService(ICategoryRepository categoryRepository, IProductRepository productRepository)
+        private readonly IProductServices _productServices;
+        public CategoryService(ICategoryRepository categoryRepository, IProductRepository productRepository, IProductServices productServices)
         {
             _categoryRepository = categoryRepository;
             _productRepository = productRepository;
+            _productServices = productServices;
         }
 
         public async Task<Category> Create(CreateCategoryDto createCategoryDto)
@@ -44,8 +45,34 @@ namespace API.Service.Services
             var tryGetCategory = await Get(categoryId);
             if(tryGetCategory == null) 
                 return false;
-            var deleteResult = await _categoryRepository.Delete(tryGetCategory);
-            return deleteResult;
+            
+            try
+            {
+				var tryGetAllProductWithThisCategory = await _productServices.GetProductsInCategory(categoryId, 0, 300000);
+                if(tryGetAllProductWithThisCategory.Total == 0)
+                {
+                    return true;
+                }
+				_categoryRepository._session.StartTransaction();
+                var deleteProductResult = await _productServices.DeleteRange(tryGetAllProductWithThisCategory.Values);
+                if(deleteProductResult is false)
+                {
+                    throw new Exception("fail to delete product in category, so category is not deleted also");
+                }
+				var deleteResult = await _categoryRepository.Delete(tryGetCategory);
+				if (deleteResult is false)
+				{
+					throw new Exception("fail to delete category, revert all changes ");
+				}
+				_categoryRepository._session.CommitTransaction();
+                return deleteResult;
+			}
+			catch (Exception ex) 
+            {   
+                _categoryRepository._session.AbortTransaction();
+                throw new Exception(ex.Message,ex);
+            }
+
         }
 
         public async Task<Category?> Get(string id)
