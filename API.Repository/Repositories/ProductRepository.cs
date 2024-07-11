@@ -14,7 +14,7 @@ namespace API.Repository.Repositories
     public class ProductRepository : BaseRepository<ProductRepository>, IProductRepository
     {
         private readonly IMongoCollection<Product> _productsCollection;
-        public ProductRepository(IOptions<MongoDBContext> setting) : base(setting)
+        public ProductRepository(IOptions<MongoDBContext> setting, IMongoClient client) : base(setting, client)
         {
             _productsCollection = _database.GetCollection<Product>("Product");
         }
@@ -81,5 +81,14 @@ namespace API.Repository.Repositories
         {
             return Task.FromResult(_productsCollection.Aggregate());
         }
-    }
+
+		public Task<bool> DeleteRange(IList<Product> products)
+		{
+            var productsTobeDeletedId = products.Select(p => p.ProductId);
+			var deleteResult = _productsCollection.DeleteMany(p => productsTobeDeletedId.Contains(p.ProductId));
+			if (deleteResult.IsAcknowledged is false)
+				return Task.FromResult(false);
+			return Task.FromResult(true);
+		}
+	}
 }

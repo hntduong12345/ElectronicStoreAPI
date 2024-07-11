@@ -81,4 +81,9 @@ namespace API.BO.DTOs.Product
         [AllowFileContentType(new string[] { "image/png", "image/jpeg" })]
         public IFormFile? ImageFile { get; set; }
     }
+    public class UpdateSale
+    {
+		public decimal CurrentPrice { get; set; }
+		public string SaleEndDate { get; set; }
+	}
 }
