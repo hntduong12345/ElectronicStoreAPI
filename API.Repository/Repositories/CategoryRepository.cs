@@ -15,7 +15,7 @@ namespace API.Repository.Repositories
     {
         private IMongoCollection<Category> _category;
         public IClientSessionHandle _session { get; set; }
-        public CategoryRepository(IOptions<MongoDBContext> setting) : base(setting)
+        public CategoryRepository(IOptions<MongoDBContext> setting, IMongoClient client) : base(setting, client)
         {
             _category = _database.GetCollection<Category>("Category");
             _session = _client.StartSession();

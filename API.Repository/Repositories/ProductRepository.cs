@@ -14,7 +14,7 @@ namespace API.Repository.Repositories
     public class ProductRepository : BaseRepository<ProductRepository>, IProductRepository
     {
         private readonly IMongoCollection<Product> _productsCollection;
-        public ProductRepository(IOptions<MongoDBContext> setting) : base(setting)
+        public ProductRepository(IOptions<MongoDBContext> setting, IMongoClient client) : base(setting, client)
         {
             _productsCollection = _database.GetCollection<Product>("Product");
         }

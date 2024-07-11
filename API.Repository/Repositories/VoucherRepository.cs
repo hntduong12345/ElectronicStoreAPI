@@ -14,7 +14,7 @@ namespace API.Repository.Repositories
     public class VoucherRepository : BaseRepository<Voucher>, IVoucherRepository
     {
         private readonly IMongoCollection<Voucher> _vouchers;
-        public VoucherRepository(IOptions<MongoDBContext> setting) : base(setting)
+        public VoucherRepository(IOptions<MongoDBContext> setting, IMongoClient client) : base(setting, client)
         {
             _vouchers = _database.GetCollection<Voucher>("Voucher");
         }

@@ -16,7 +16,7 @@ namespace API.Repository.Repositories
     {
         private readonly IMongoCollection<Combo> _combo;
 
-        public ComboRepository(IOptions<MongoDBContext> setting) : base(setting)
+        public ComboRepository(IOptions<MongoDBContext> setting, IMongoClient client) : base(setting, client)
         {
             _combo = _database.GetCollection<Combo>("Combo"); 
         }

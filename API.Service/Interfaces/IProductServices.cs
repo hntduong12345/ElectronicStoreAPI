@@ -18,12 +18,14 @@ namespace API.Service.Interfaces
         Task<PagingResponseDto<Product>> GetProductsInCategory(string categoryId, int start, int take);
         Task<Product> Create(CreateProductDto createCategoryDto);
         Task Update(string categoryId, UpdateProductDto updateCategoryDto);
-        Task Delete(string categoryId);
+		Task Update(Product productToUpdate);
+		Task Delete(string categoryId);
         Task<bool> DeleteRange(IList<Product> productsTobeDeleted);
 
 		Task<bool> SetProductSales(Product product, int newCurrentPrice, DateTime saleEndDate);
-        Task<bool> OnBuyProduct(Product product, int amount);
+        Task BuyProduct(Product product, int amount);
+		Task CancelProduct(Product product, int amount);
 
 
-    }
+	}
 }
