@@ -18,7 +18,7 @@ namespace API.Repository.Repositories
     {
         private readonly IMongoCollection<Order> _orders;
 
-        public OrderRepository(IOptions<MongoDBContext> setting) : base(setting)
+        public OrderRepository(IOptions<MongoDBContext> setting, IMongoClient client) : base(setting, client)
         {
             _orders = _database.GetCollection<Order>("Order");
         }

@@ -4,6 +4,8 @@ using ElectronicStoreAPI.Constants;
 using ElectronicStoreAPI.Extensions;
 using ElectronicStoreAPI.Middlewares;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,7 +25,12 @@ builder.Services.AddConfigSwagger();
 
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.Configure<MongoDBContext>(builder.Configuration.GetSection("MongoDbSection"));
-
+builder.Services.AddScoped<IMongoClient>(sp =>
+{
+    var getContext = sp.GetRequiredService<IOptions<MongoDBContext>>();
+    IMongoClient client = new MongoClient(getContext.Value.ConnectionURI);
+    return client;
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,4 +1,5 @@
-﻿using API.BO.DTOs;
+﻿using Amazon.Runtime.Internal;
+using API.BO.DTOs;
 using API.BO.DTOs.Product;
 using API.BO.Models;
 using API.Repository.Repositories;
@@ -7,7 +8,9 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 namespace ElectronicStoreAPI.Controllers
 {
@@ -29,6 +32,7 @@ namespace ElectronicStoreAPI.Controllers
             _productServices = productServices;
             _categoryServices = categoryServices;
             _mapper = mapper;
+            //var getAllResult = client.GetDatabase("ElectronicStore").GetCollection<Product>("Product").Find(filter => true).ToList();
         }
         [HttpGet("all")]
         public async Task<ActionResult> GetAll()
@@ -92,7 +96,59 @@ namespace ElectronicStoreAPI.Controllers
             await _productServices.Update(productId, updateProductDto);
             return Ok();
         }
-        [HttpDelete("{productId}")]
+        [HttpPut("Storage/{productId}")]
+        public async Task<ActionResult> UpdateInventory([FromRoute] string productId, [FromForm] int StorageAmount)
+        {
+            if(StorageAmount < 0 || StorageAmount > 10000000)
+            {
+                return BadRequest("Storage amount is invalid, it can be >=0 and less than 100mil ");
+            }
+            var tryGetProduct = await _productServices.Get(productId);
+            if (tryGetProduct == null)
+                return BadRequest("not found product to update storage ");
+            tryGetProduct.StorageAmount = StorageAmount;
+            var updateProductDto = new UpdateProductDto()
+            {
+                CategoryId = tryGetProduct.CategoryId,
+                DefaultPrice = tryGetProduct.DefaultPrice,
+                Description = tryGetProduct.Description,
+                //IsOnSale = tryGetProduct.IsOnSale,
+                //SaleEndDate = tryGetProduct.SaleEndDate,
+                ProductName = tryGetProduct.ProductName,
+                Manufacturer = tryGetProduct.Manufacturer,
+                StorageAmount = tryGetProduct.StorageAmount,
+            };
+            await _productServices.Update(tryGetProduct.ProductId, updateProductDto);
+            return Ok();
+        }
+		[HttpPut("Sale/{productId}")]
+		public async Task<ActionResult> UpdateSale([FromRoute] string productId, [FromBody] UpdateSale updateDto)
+		{
+			var tryGetProduct = await _productServices.Get(productId);
+			if (tryGetProduct == null)
+				return BadRequest("not found product to update storage ");
+            bool parseResult = DateTime.TryParseExact(updateDto.SaleEndDate,"yyyy-MM-dd HH:mm",null,DateTimeStyles.None, out DateTime dateTimeFromDto);
+            if(parseResult is false)
+            {
+                return BadRequest("fail to parse date tiem from client");
+            }
+            if(DateTime.Compare(dateTimeFromDto,DateTime.Now) <= 0) 
+            {
+                return BadRequest("date time not valid");
+            }
+            if(updateDto.CurrentPrice <= 0 || updateDto.CurrentPrice > tryGetProduct.DefaultPrice)
+            {
+                return BadRequest("price not valid");
+            }
+            tryGetProduct.CurrentPrice = updateDto.CurrentPrice;
+            tryGetProduct.SaleEndDate = dateTimeFromDto;
+            tryGetProduct.IsOnSale = true;
+
+            await _productServices.Update(tryGetProduct);
+			//await _productServices.Update(tryGetProduct.ProductId, updateProductDto);
+			return Ok();
+		}
+		[HttpDelete("{productId}")]
         public async Task<ActionResult> Delete([FromRoute] string productId)
         {
             await _productServices.Delete(productId);

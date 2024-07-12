@@ -11,12 +11,12 @@ namespace API.Repository.Repositories
 {
     public abstract class BaseRepository<T> where T : class
     {
-        protected MongoClient _client;
+        protected IMongoClient _client;
         protected IMongoDatabase _database;
 
-        public BaseRepository(IOptions<MongoDBContext> setting)
+        public BaseRepository(IOptions<MongoDBContext> setting, IMongoClient client)
         {
-            _client = new MongoClient(setting.Value.ConnectionURI);
+            _client = client;// new MongoClient(setting.Value.ConnectionURI);
             _database = _client.GetDatabase(setting.Value.DatabaseName);
         }
     }

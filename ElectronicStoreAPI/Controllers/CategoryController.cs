@@ -34,7 +34,7 @@ namespace ElectronicStoreAPI.Controllers
             return Ok(_mapper.Map<CategoryDto>(getResult));
         }
         [HttpPost]
-        public async Task<ActionResult> Create([FromForm] CreateCategoryDto createCategoryDto)
+        public async Task<ActionResult> Create([FromBody] CreateCategoryDto createCategoryDto)
         {
             var createResult = await _categoryServices.Create(createCategoryDto);
             if (createResult == null)
@@ -44,7 +44,7 @@ namespace ElectronicStoreAPI.Controllers
         [HttpPut("{categoryId}")]
         public async Task<ActionResult> Update(
             [FromRoute] string categoryId,
-            [FromForm] UpdateCategoryDto updateCategoryDto)
+            [FromBody] UpdateCategoryDto updateCategoryDto)
         {
             var updateresult = await _categoryServices.Update(categoryId, updateCategoryDto);
             if (updateresult is false)
