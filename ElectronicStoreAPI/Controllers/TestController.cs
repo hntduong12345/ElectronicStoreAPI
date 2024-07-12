@@ -7,6 +7,7 @@ using API.Service.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using System.Reflection;
 
 namespace ElectronicStoreAPI.Controllers
@@ -20,12 +21,12 @@ namespace ElectronicStoreAPI.Controllers
         private readonly CategoryRepository _categoryRepository ;
         private readonly ProductRepository _productRepository;
 
-        public TestController(IImageModificationService modificationService, IUploadImageService uploadImageService, IOptions<MongoDBContext> setting)
+        public TestController(IImageModificationService modificationService, IUploadImageService uploadImageService, IOptions<MongoDBContext> setting,IMongoClient client)
         {
             _modificationService = modificationService;
             _uploadImageService = uploadImageService;
-            _categoryRepository = new CategoryRepository(setting);
-            _productRepository = new ProductRepository(setting);
+            //_categoryRepository = new CategoryRepository(setting);
+            _productRepository = new ProductRepository(setting, client);
 
         }
 

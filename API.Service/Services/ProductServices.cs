@@ -70,7 +70,20 @@ namespace API.Service.Services
                 throw new Exception("cannot found product with the provided id");
             await _productRepository.Delete(getProduct);
         }
-
+        public async Task<bool> DeleteRange(IList<Product> productsTobeDeleted)
+        {
+            var listImagesToDelete = productsTobeDeleted.Select(p => p.RelativeUrl);
+            var deleteResult =  await _productRepository.DeleteRange(productsTobeDeleted);
+		    if(deleteResult is false)
+            {
+                return false;
+            }
+            foreach(var imagesLinkToDelete in listImagesToDelete)
+            {
+                Task.Run( () => { _uploadImageService.DeleteImage(imagesLinkToDelete); });
+            }
+            return true;
+        }
         public async Task<Product?> Get(string id)
         {
             return await _productRepository.Get(id);
@@ -168,6 +181,10 @@ namespace API.Service.Services
             if (updateResult is false)
                 throw new Exception("server error with update");
         }
+        public async Task Update(Product productToUpdate)
+        {
+            await _productRepository.Update(productToUpdate);
+        }
         public async Task<bool> SetProductSales(Product product, int newCurrentPrice, DateTime saleEndDate)
         {
             //if(newCurrentPrice <= 0 || newCurrentPrice > product.DefaultPrice)
@@ -184,17 +201,30 @@ namespace API.Service.Services
             //return true;
             throw new NotImplementedException();
         }
-        public async Task<bool> OnBuyProduct(Product product, int amount)
+        public bool ValidateIsAmountEnough(Product productTobeBought, int amountOfItem)
         {
-            var currentAmount = product.StorageAmount - amount ;
+            var currentAmount = productTobeBought.StorageAmount;
+            if (currentAmount <= 0)
+                return false;
+            if (currentAmount - amountOfItem < 0)
+                return false;
+            return true;
+        }
+        public async Task BuyProduct(Product product, int boughtAmount)
+        {
+            var currentAmount = product.StorageAmount - boughtAmount;
             if( currentAmount < 0) 
             {
                 throw new Exception("cannot buy product, the amount is over limit in storage");
             }
             product.StorageAmount = currentAmount;
-            product.SaleAmount = product.SaleAmount + amount ;
+            product.SaleAmount = product.SaleAmount + boughtAmount;
             await _productRepository.Update(product);
-            return true;
+        }
+        public async Task CancelProduct (Product product, int boughtAmount)
+        {
+            product.StorageAmount += boughtAmount;
+            await _productRepository.Update(product);
         }
         private void UpdateCurrentPriceOnDefaultPrice(Product currentProduct, decimal updatedPrice)
         {
