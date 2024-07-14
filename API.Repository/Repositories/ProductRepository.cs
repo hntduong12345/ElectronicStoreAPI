@@ -14,7 +14,7 @@ namespace API.Repository.Repositories
     public class ProductRepository : BaseRepository<ProductRepository>, IProductRepository
     {
         private readonly IMongoCollection<Product> _productsCollection;
-        public ProductRepository(IOptions<MongoDBContext> setting) : base(setting)
+        public ProductRepository(IOptions<MongoDBContext> setting, IMongoClient client) : base(setting, client)
         {
             _productsCollection = _database.GetCollection<Product>("Product");
         }
@@ -62,14 +62,14 @@ namespace API.Repository.Repositories
         }
         public Task<bool> Update(Product product)
         {
-            var updateResult = _productsCollection.ReplaceOne(c => c.CategoryId.Equals(product.CategoryId), product);
+            var updateResult = _productsCollection.ReplaceOne(c => c.ProductId.Equals(product.ProductId), product);
             if (updateResult.IsAcknowledged is false)
                 return Task.FromResult(false);
             return Task.FromResult(true);
         }
-        public Task<bool> Delete(Product category)
+        public Task<bool> Delete(Product product)
         {
-            var deleteResult = _productsCollection.DeleteOne(c => c.CategoryId.Equals(category.CategoryId));
+            var deleteResult = _productsCollection.DeleteOne(c => c.ProductId.Equals(product.ProductId));
             if (deleteResult.IsAcknowledged is false)
                 return Task.FromResult(false);
             if (deleteResult.DeletedCount <= 0)
@@ -81,5 +81,14 @@ namespace API.Repository.Repositories
         {
             return Task.FromResult(_productsCollection.Aggregate());
         }
-    }
+
+		public Task<bool> DeleteRange(IList<Product> products)
+		{
+            var productsTobeDeletedId = products.Select(p => p.ProductId);
+			var deleteResult = _productsCollection.DeleteMany(p => productsTobeDeletedId.Contains(p.ProductId));
+			if (deleteResult.IsAcknowledged is false)
+				return Task.FromResult(false);
+			return Task.FromResult(true);
+		}
+	}
 }

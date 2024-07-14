@@ -26,12 +26,12 @@ namespace API.Service.Services
         public async Task<LoginResponseDTO> Login(LoginDTO loginDTO)
         {
             Expression<Func<Account, object>> filter = RegexUtil.IsEmail(loginDTO.Input) ? p => p.Email : p => p.PhoneNumber;
-            var login = (await _accountRepository.GetByCondition( 1, 10, (filter, loginDTO.Input), (p => p.Password, loginDTO.Password))).FirstOrDefault();
+            var login = (await _accountRepository.GetByCondition(1, 10, (filter, loginDTO.Input), (p => p.Password, loginDTO.Password))).FirstOrDefault();
             if (login == null)
             {
                 throw new Exception("Wrong email or password");
             }
-            if(login.Status == AccountStatusEnum.DEACTIVATED)
+            if (login.Status == AccountStatusEnum.DEACTIVATED)
             {
                 throw new Exception("This account has been deactivated");
             }
@@ -44,8 +44,8 @@ namespace API.Service.Services
         }
         public async Task<LoginResponseDTO> Register(RegisterDTO registerDTO)
         {
-            try
-            {
+                if (!RegexUtil.IsEmail(registerDTO.Email))
+                    throw new Exception("Email is not in correct format");
                 bool checkedExist = (await _accountRepository.GetByCondition(filters: (p => p.Email, registerDTO.Email))).Any();
                 if (!checkedExist)
                 {
@@ -54,8 +54,6 @@ namespace API.Service.Services
                         Email = registerDTO.Email,
                         FirstName = registerDTO.FirstName,
                         LastName = registerDTO.LastName,
-                        Address = registerDTO.Address,
-                        PhoneNumber = registerDTO.PhoneNumber,
                         Password = registerDTO.Password,
                         Role = AccountRoleEnum.CUSTOMER
                     };
@@ -76,11 +74,6 @@ namespace API.Service.Services
                 {
                     throw new Exception("This email has already being used!");
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
         }
         public async Task<Account> GetUserInformation(string id)
         {
@@ -187,6 +180,21 @@ namespace API.Service.Services
                 result.LastName = accountDTO.LastName;
                 result.Password = accountDTO.Password;
                 await _accountRepository.Update(result);
+                return "";
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+        public async Task<string> DeleteAccount(string id)
+        {
+            try
+            {
+                var result = (await _accountRepository.GetByCondition(filters: (p => p.AccountId, id))).FirstOrDefault();
+                if (result == null) throw new Exception("Can't find account");
+                if (result.Role == AccountRoleEnum.CUSTOMER) throw new Exception("Can't delete customer account");
+                await _accountRepository.Delete(result);
                 return "";
             }
             catch (Exception ex)

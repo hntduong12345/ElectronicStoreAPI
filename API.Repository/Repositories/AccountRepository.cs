@@ -17,7 +17,7 @@ namespace API.Repository.Repositories
     public class AccountRepository : BaseRepository<Account>, IAccountRepository
     {
         private readonly IMongoCollection<Account> _accounts;
-        public AccountRepository(IOptions<MongoDBContext> setting) : base(setting)
+        public AccountRepository(IOptions<MongoDBContext> setting,IMongoClient client) : base(setting, client)
         {
             _accounts = _database.GetCollection<Account>("Account");
         }
