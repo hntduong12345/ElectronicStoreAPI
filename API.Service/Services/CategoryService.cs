@@ -51,7 +51,8 @@ namespace API.Service.Services
 				var tryGetAllProductWithThisCategory = await _productServices.GetProductsInCategory(categoryId, 0, 300000);
                 if(tryGetAllProductWithThisCategory.Total == 0)
                 {
-                    return true;
+					return  await _categoryRepository.Delete(tryGetCategory);
+					//return true;
                 }
 				_categoryRepository._session.StartTransaction();
                 var deleteProductResult = await _productServices.DeleteRange(tryGetAllProductWithThisCategory.Values);
