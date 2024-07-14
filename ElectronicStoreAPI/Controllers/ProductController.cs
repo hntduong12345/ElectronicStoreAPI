@@ -99,7 +99,7 @@ namespace ElectronicStoreAPI.Controllers
         [HttpPut("Storage/{productId}")]
         public async Task<ActionResult> UpdateInventory([FromRoute] string productId, [FromForm] int StorageAmount)
         {
-            if(StorageAmount < 0 || StorageAmount > 10000000)
+            if(StorageAmount < 0 || StorageAmount > 100000)
             {
                 return BadRequest("Storage amount is invalid, it can be >=0 and less than 100mil ");
             }
